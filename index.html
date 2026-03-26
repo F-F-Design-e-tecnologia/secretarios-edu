@@ -223,6 +223,66 @@ footer{text-align:center;padding:20px 16px 30px;font-size:12px;color:#bbb}
 footer a{color:var(--azul);opacity:.4;text-decoration:none}
 footer a:hover{opacity:.7}
 [hidden]{display:none!important}
+/* ── CASINO POPUP ── */
+.casino-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:900;
+  display:none;align-items:center;justify-content:center;padding:20px;
+  backdrop-filter:blur(4px)
+}
+.casino-overlay.show{display:flex}
+.casino-popup{
+  background:linear-gradient(145deg,#0f0c29,#1a1060,#24243e);
+  border-radius:24px;padding:32px 24px;text-align:center;max-width:360px;width:100%;
+  border:2px solid rgba(255,215,0,.4);
+  box-shadow:0 0 40px rgba(255,215,0,.2),0 0 80px rgba(124,58,237,.3);
+  animation:casinoPop .5s cubic-bezier(.175,.885,.32,1.275);
+  position:relative;overflow:hidden
+}
+@keyframes casinoPop{from{transform:scale(.5) rotate(-5deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.casino-popup::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(255,215,0,.03) 10px,rgba(255,215,0,.03) 20px);
+  pointer-events:none
+}
+.casino-neon{
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(22px,6vw,30px);
+  color:#FFD700;
+  text-shadow:0 0 10px #FFD700,0 0 20px #FFD700,0 0 40px #FF8C00;
+  line-height:1.2;margin-bottom:8px;
+  animation:neonFlicker 2s infinite
+}
+@keyframes neonFlicker{0%,100%{opacity:1}92%{opacity:1}93%{opacity:.7}94%{opacity:1}96%{opacity:.8}97%{opacity:1}}
+.casino-sub{color:rgba(255,255,255,.75);font-size:14px;font-weight:700;margin-bottom:20px;line-height:1.5}
+.casino-sub strong{color:#FFD700}
+.casino-coins{font-size:40px;animation:coinSpin 1s ease-in-out infinite alternate;display:block;margin-bottom:12px}
+@keyframes coinSpin{from{transform:rotateY(0deg) scale(1)}to{transform:rotateY(30deg) scale(1.1)}}
+.casino-stars{letter-spacing:4px;font-size:20px;margin-bottom:16px;animation:starPulse 1.2s infinite}
+@keyframes starPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.9)}}
+.btn-casino{
+  width:100%;padding:15px;border:none;border-radius:14px;
+  font-family:'Fredoka One',cursive;font-size:18px;cursor:pointer;
+  background:linear-gradient(135deg,#FFD700,#FF8C00);
+  color:#1a0a00;
+  box-shadow:0 0 20px rgba(255,215,0,.5);
+  transition:transform .15s,box-shadow .15s;
+  margin-bottom:10px;
+  animation:btnPulse 1.5s infinite
+}
+@keyframes btnPulse{0%,100%{box-shadow:0 0 20px rgba(255,215,0,.5)}50%{box-shadow:0 0 35px rgba(255,215,0,.9)}}
+.btn-casino:active{transform:scale(.97)}
+.btn-casino-skip{
+  background:none;border:none;color:rgba(255,255,255,.4);
+  font-size:13px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;
+  padding:8px;width:100%
+}
+.btn-casino-skip:hover{color:rgba(255,255,255,.7)}
+.casino-badge{
+  display:inline-block;background:rgba(255,215,0,.15);
+  border:1px solid rgba(255,215,0,.3);border-radius:8px;
+  padding:4px 12px;font-size:12px;color:#FFD700;font-weight:700;
+  margin-bottom:14px;letter-spacing:1px
+}
 </style>
 </head>
 <body>
@@ -379,7 +439,6 @@ footer a:hover{opacity:.7}
       <div class="result-msg" id="res-msg">Você ganhou!</div>
       <div class="result-btns" id="result-btns" style="display:none;margin-top:14px;gap:8px;flex-direction:column">
         <button class="btn-wpp" onclick="shareResultWhatsApp()" style="width:100%;padding:12px;border:none;border-radius:12px;background:#25D366;color:#fff;font-family:'Fredoka One',cursive;font-size:15px;cursor:pointer">📤 Compartilhar resultado</button>
-        <button class="btn-outline" onclick="tentarNovamente()" style="width:100%;padding:11px;border-radius:12px;background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.3);font-family:'Fredoka One',cursive;font-size:15px;cursor:pointer">🔄 Tentar novamente</button>
       </div>
       <!-- Referral block — shown after spin -->
       <div id="ref-block" style="display:none;margin-top:18px;background:rgba(255,255,255,0.12);border-radius:14px;padding:16px;border:2px solid rgba(255,255,255,0.25)">
@@ -394,6 +453,25 @@ footer a:hover{opacity:.7}
     <button class="btn btn-outline" style="margin-top:16px" onclick="goBack()">← Voltar ao perfil</button>
   </div>
 </section>
+
+<!-- ══ CASINO POPUP ══ -->
+<div class="casino-overlay" id="casino-overlay">
+  <div class="casino-popup">
+    <span class="casino-coins">🪙</span>
+    <div class="casino-stars">⭐ ⭐ ⭐</div>
+    <div class="casino-badge">🎰 SORTEIO EXCLUSIVO</div>
+    <div class="casino-neon">Tente a sua<br>sorte aqui!</div>
+    <p class="casino-sub">
+      Indique colegas e concorra ao<br>
+      <strong>sorteio exclusivo dos indicadores!</strong><br>
+      Quem mais indicar, mais chances tem! 🏆
+    </p>
+    <button class="btn-casino" onclick="fecharCasinoEMostrarRef()">
+      🔗 Quero meu link de indicação!
+    </button>
+    <button class="btn-casino-skip" onclick="fecharCasino()">Não, obrigado</button>
+  </div>
+</div>
 
 <footer>
   Rede Oficial de Secretários de Educação · 2025
@@ -419,6 +497,7 @@ let currentUser = {};
 let wheelRotation = 0;
 let isSpinning = false;
 let hasSpun = false;
+let wonPrize = false; // bloqueia novo giro após ganhar R$100
 
 // Captura código de referência da URL (?ref=CODIGO)
 const REF_CODE = new URLSearchParams(window.location.search).get('ref') || null;
@@ -491,8 +570,13 @@ async function submitForm(){
 
   try {
     // Verifica se WhatsApp já cadastrado
-    const { data: existing } = await sb.from('secretarios')
+    const { data: existing, error: selErr } = await sb.from('secretarios')
       .select('id').eq('whatsapp', wpp).eq('evento', EVENTO_ID).maybeSingle();
+
+    if(selErr && selErr.code !== 'PGRST116'){
+      // Se SELECT falhar por RLS, tenta continuar mas loga
+      console.warn('Duplicate check failed:', selErr.message);
+    }
 
     if(existing){
       hideLoading();
@@ -545,38 +629,71 @@ async function gerarGhibli(){
   document.getElementById('ghibli-loading').style.display = 'block';
 
   const funcao = currentUser.funcao || 'educator';
-  const prompt = encodeURIComponent(
-    `Studio Ghibli anime style portrait, Hayao Miyazaki art, Brazilian ${funcao}, soft watercolor background, warm gentle expression, high quality illustration, faithful to the person's appearance`
-  );
   const seed = Math.floor(Math.random() * 99999);
 
-  // Pollinations img2img: envia a imagem como base64 via POST
   try {
-    const base64Data = fotoBase64.split(',')[1];
-    const mimeType   = fotoBase64.split(';')[0].split(':')[1];
+    // Redimensiona foto para max 512px (Pollinations aceita melhor)
+    const resized = await resizeImage(fotoBase64, 512);
+    const base64Data = resized.split(',')[1];
 
-    const resp = await fetch(`https://image.pollinations.ai/prompt/${prompt}?nologo=true&seed=${seed}&model=flux`, {
+    // Pollinations img2img via modelo turbo
+    const prompt = encodeURIComponent(
+      'Studio Ghibli anime style, Hayao Miyazaki watercolor portrait, soft pastel colors, warm expressive eyes, gentle smile, hand-drawn anime illustration style'
+    );
+
+    const resp = await fetch('https://image.pollinations.ai/prompt/' + prompt, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
+        model: 'turbo',
         image: base64Data,
-        image_type: mimeType,
-        strength: 0.75
+        strength: 0.7,
+        nologo: true,
+        seed: seed,
+        width: 512,
+        height: 512
       })
     });
 
-    if(!resp.ok) throw new Error('API error');
+    if(!resp.ok) throw new Error('status ' + resp.status);
     const blob = await resp.blob();
-    const url  = URL.createObjectURL(blob);
-    mostrarAvatarGhibli(url);
-  } catch {
-    // Fallback: text-to-image com prompt descritivo
+    if(blob.size < 5000) throw new Error('imagem muito pequena');
+    mostrarAvatarGhibli(URL.createObjectURL(blob));
+
+  } catch(err) {
+    console.warn('img2img falhou, tentando text2img:', err);
+    // Fallback: descreve a pessoa pelo nome e usa text-to-image
+    const firstName = (currentUser.nome || 'person').split(' ')[0];
+    const prompt2 = encodeURIComponent(
+      `Studio Ghibli anime portrait of ${firstName}, Brazilian ${funcao}, Hayao Miyazaki style, soft watercolor, warm expression, high quality`
+    );
     const img = new Image();
     img.crossOrigin = 'anonymous';
     img.onload  = () => mostrarAvatarGhibli(img.src);
-    img.onerror = () => pularFoto(); // fallback canvas
-    img.src = `https://image.pollinations.ai/prompt/${prompt}&nologo=true&seed=${seed}&width=400&height=400`;
+    img.onerror = () => {
+      document.getElementById('ghibli-loading').style.display = 'none';
+      alert('Não foi possível gerar o avatar agora. Tente novamente ou clique em Pular.');
+      document.getElementById('btn-gerar').style.display = 'block';
+    };
+    img.src = `https://image.pollinations.ai/prompt/${prompt2}?nologo=true&seed=${seed}&width=512&height=512&model=flux`;
   }
+}
+
+// Redimensiona imagem para max maxSize px mantendo proporção
+function resizeImage(dataUrl, maxSize){
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const ratio = Math.min(maxSize/img.width, maxSize/img.height, 1);
+      const w = Math.round(img.width * ratio);
+      const h = Math.round(img.height * ratio);
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', 0.85));
+    };
+    img.src = dataUrl;
+  });
 }
 
 function pularFoto(){
@@ -771,7 +888,10 @@ function drawWheel(canvas, rotation){
 
 /* ═══════════════ SPIN ═══════════════ */
 async function spinWheel(){
-  if(isSpinning || hasSpun) return;
+  if(isSpinning || hasSpun){
+    alert('🔒 Você já utilizou sua tentativa neste cadastro!');
+    return;
+  }
   isSpinning = true;
   document.getElementById('spin-btn').disabled = true;
   document.getElementById('result-box').style.display = 'none';
@@ -830,6 +950,7 @@ async function onSpinEnd(winIdx){
 
       if(updated && updated.length > 0){
         // Winner!
+        wonPrize = true;
         document.getElementById('res-emoji').textContent  = '💰';
         document.getElementById('res-title').textContent  = 'VOCÊ GANHOU!';
         document.getElementById('res-msg').innerHTML =
@@ -874,21 +995,37 @@ async function onSpinEnd(winIdx){
   }
 
   document.getElementById('spin-btn').disabled = true;
-  document.getElementById('spin-tip').textContent = 'Você já girou neste cadastro!';
+  document.getElementById('spin-tip').textContent = '🔒 Você já utilizou sua tentativa!';
   box.style.display = 'block';
   document.getElementById('result-btns').style.display = 'flex';
 
-  // Mostra bloco de indicação
-  showRefBlock();
+  // Prepara link de referência
+  prepararRefLink();
+
+  // Após 2.5s mostra popup casino
+  setTimeout(abrirCasino, 2500);
 }
 
-function showRefBlock(){
+function prepararRefLink(){
   const base = window.location.href.split('?')[0];
-  const refCode = currentUser.wpp; // usa WhatsApp como código único
+  const refCode = currentUser.wpp;
   const refUrl = `${base}?ref=${refCode}`;
   currentUser.refUrl = refUrl;
   document.getElementById('ref-link-display').textContent = refUrl;
+}
+
+function abrirCasino(){
+  document.getElementById('casino-overlay').classList.add('show');
+}
+
+function fecharCasino(){
+  document.getElementById('casino-overlay').classList.remove('show');
+}
+
+function fecharCasinoEMostrarRef(){
+  document.getElementById('casino-overlay').classList.remove('show');
   document.getElementById('ref-block').style.display = 'block';
+  document.getElementById('ref-block').scrollIntoView({behavior:'smooth',block:'center'});
 }
 
 function copiarRefLink(){
@@ -923,15 +1060,7 @@ function shareResultWhatsApp(){
   window.open(`https://wa.me/?text=${txt}`, '_blank');
 }
 
-function tentarNovamente(){
-  hasSpun = false;
-  document.getElementById('result-box').style.display = 'none';
-  document.getElementById('result-btns').style.display = 'none';
-  document.getElementById('ref-block').style.display = 'none';
-  document.getElementById('spin-btn').disabled = false;
-  document.getElementById('spin-tip').textContent = '👆 Toque no botão para girar!';
-  drawWheel(document.getElementById('wheel'), wheelRotation);
-}
+
 
 /* ═══════════════ CONFETTI ═══════════════ */
 function launchConfetti(count=120){
