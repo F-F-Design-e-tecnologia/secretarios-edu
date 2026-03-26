@@ -2,571 +2,715 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Rede de Secretários de Educação</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>UNDIME — União dos Dirigentes Municipais de Educação</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
+:root{
+  --navy:#0B1F3F;
+  --navy-light:#163562;
+  --blue:#2563EB;
+  --blue-light:#60A5FA;
+  --sky:#DBEAFE;
+  --green:#059669;
+  --green-light:#34D399;
+  --yellow:#F59E0B;
+  --yellow-light:#FCD34D;
+  --amber:#FFFBEB;
+  --white:#FFFFFF;
+  --gray50:#F8FAFC;
+  --gray100:#F1F5F9;
+  --gray200:#E2E8F0;
+  --gray400:#94A3B8;
+  --gray600:#475569;
+  --gray800:#1E293B;
+  --red:#DC2626;
+  --radius:16px;
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Nunito',sans-serif;background:#0B1D3A;min-height:100vh;overflow-x:hidden}
+body{
+  font-family:'Outfit',sans-serif;
+  background:var(--gray50);
+  color:var(--gray800);
+  min-height:100vh;overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
 
-/* ── HERO ── */
+/* ═══ HERO ═══ */
 .hero{
-  background:linear-gradient(135deg,#0F2B5C 0%,#1A3F7A 40%,#2056A0 100%);
-  padding:40px 20px 30px;
-  text-align:center;
-  position:relative;
-  overflow:hidden;
+  background:linear-gradient(160deg,var(--navy) 0%,var(--navy-light) 45%,#1E4D8C 100%);
+  padding:32px 20px 28px;text-align:center;
+  position:relative;overflow:hidden;
 }
 .hero::before{
   content:'';position:absolute;inset:0;
-  background:
-    repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 60px),
-    repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 60px);
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5L35 15H25L30 5z' fill='%23ffffff' opacity='.03'/%3E%3Ccircle cx='10' cy='40' r='3' fill='%23ffffff' opacity='.02'/%3E%3Crect x='45' y='35' width='8' height='10' rx='1' fill='%23ffffff' opacity='.02'/%3E%3C/svg%3E") repeat;
 }
-.school-icon{
-  width:100px;height:100px;margin:0 auto 16px;
+.hero::after{
+  content:'';position:absolute;bottom:-2px;left:0;right:0;height:40px;
+  background:var(--gray50);
+  border-radius:40px 40px 0 0;
+}
+
+/* Floating education icons */
+.edu-float{position:absolute;opacity:.06;font-size:28px;pointer-events:none;animation:drift 12s ease-in-out infinite alternate}
+@keyframes drift{0%{transform:translateY(0) rotate(-5deg)}100%{transform:translateY(-15px) rotate(5deg)}}
+
+.logo-badge{
+  width:88px;height:88px;margin:0 auto 14px;
+  background:var(--white);border-radius:50%;
   display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(0,0,0,.15);
   position:relative;z-index:1;
 }
-.school-icon svg{width:100%;height:100%}
+.logo-badge svg{width:52px;height:52px}
+
+.hero-label{
+  display:inline-block;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15);
+  border-radius:20px;padding:4px 14px;
+  font-size:11px;font-weight:600;color:var(--yellow-light);
+  letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:10px;position:relative;z-index:1;
+}
 .hero h1{
-  font-family:'Fredoka One',cursive;
-  font-size:26px;color:#fff;line-height:1.3;
-  position:relative;z-index:1;
+  font-family:'Playfair Display',serif;
+  font-size:clamp(22px,5.5vw,30px);font-weight:800;
+  color:var(--white);line-height:1.25;
+  position:relative;z-index:1;margin-bottom:4px;
 }
-.hero h1 span{color:#FFD54F}
-.hero p{
-  color:#FFD54F;font-size:16px;font-weight:700;
-  margin-top:12px;position:relative;z-index:1;
+.hero h1 em{font-style:normal;color:var(--yellow-light)}
+.hero-org{
+  font-size:13px;font-weight:600;color:var(--blue-light);
+  letter-spacing:.5px;position:relative;z-index:1;
+  margin-bottom:16px;opacity:.85;
 }
 
-/* ── STEPS ── */
+.prize-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 22px;
+  background:linear-gradient(135deg,rgba(245,158,11,.18),rgba(245,158,11,.08));
+  border:1.5px solid rgba(245,158,11,.35);
+  border-radius:50px;position:relative;z-index:1;
+  animation:pillGlow 3s ease-in-out infinite alternate;
+}
+@keyframes pillGlow{0%{box-shadow:0 2px 15px rgba(245,158,11,.1)}100%{box-shadow:0 2px 25px rgba(245,158,11,.25)}}
+.prize-pill span{font-weight:800;font-size:15px;color:var(--yellow-light)}
+
+/* ═══ STEPS ═══ */
 .steps{
-  display:flex;gap:8px;padding:0 20px;
-  margin-top:20px;position:relative;z-index:1;
+  display:flex;gap:8px;padding:20px 16px 0;max-width:420px;margin:0 auto;
 }
-.step-tab{
-  flex:1;padding:12px;border-radius:30px;
-  font-weight:800;font-size:15px;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  border:none;cursor:pointer;transition:.3s;
+.step-pill{
+  flex:1;padding:10px 0;border-radius:30px;
+  font-weight:800;font-size:13px;letter-spacing:.3px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  border:2px solid transparent;cursor:default;transition:.3s;
 }
-.step-num{
-  width:26px;height:26px;border-radius:50%;
+.step-pill .sn{
+  width:24px;height:24px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
-  font-size:13px;font-weight:800;
+  font-size:12px;font-weight:900;
 }
-.step-tab.active{background:#27AE60;color:#fff}
-.step-tab.active .step-num{background:rgba(255,255,255,.25);color:#fff}
-.step-tab.inactive{background:rgba(255,255,255,.12);color:rgba(255,255,255,.5)}
-.step-tab.inactive .step-num{background:rgba(255,255,255,.1);color:rgba(255,255,255,.5)}
+.step-pill.on{
+  background:var(--blue);color:#fff;
+  border-color:var(--blue);
+  box-shadow:0 3px 12px rgba(37,99,235,.3);
+}
+.step-pill.on .sn{background:rgba(255,255,255,.2);color:#fff}
+.step-pill.off{background:var(--gray200);color:var(--gray400)}
+.step-pill.off .sn{background:rgba(0,0,0,.06);color:var(--gray400)}
 
-/* ── CARD ── */
+/* ═══ CARD ═══ */
 .card{
-  background:#fff;margin:0;
-  border-radius:28px 28px 0 0;
-  padding:32px 22px 40px;
-  min-height:60vh;
-  margin-top:24px;
+  margin:16px 14px 0;
+  background:var(--white);
+  border:1px solid var(--gray200);
+  border-radius:var(--radius);
+  padding:24px 20px 28px;
+  box-shadow:0 2px 12px rgba(0,0,0,.04);
 }
-.card-title{
-  font-family:'Fredoka One',cursive;
-  font-size:22px;color:#1A3F7A;
-  display:flex;align-items:center;gap:10px;
-  margin-bottom:6px;
-}
-.card-sub{color:#777;font-size:14px;margin-bottom:28px;line-height:1.5}
-
-/* ── FORM ── */
-.field{margin-bottom:20px}
-.field label{
-  display:flex;align-items:center;gap:6px;
-  font-weight:700;font-size:14px;color:#333;margin-bottom:8px;
-}
-.field input,.field select{
-  width:100%;padding:14px 16px;
-  border:2px solid #E0E4EA;border-radius:14px;
-  font-size:15px;font-family:'Nunito',sans-serif;
-  color:#333;background:#FAFBFC;
-  transition:.2s;outline:none;
-}
-.field input:focus,.field select:focus{
-  border-color:#2056A0;background:#fff;
-  box-shadow:0 0 0 4px rgba(32,86,160,.1);
-}
-.field input::placeholder{color:#B0B8C4}
-.field select{appearance:none;cursor:pointer;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='2' fill='none'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 16px center;
-}
-
-.btn-submit{
-  width:100%;padding:16px;margin-top:8px;
-  background:linear-gradient(135deg,#27AE60,#2ECC71);
-  color:#fff;font-family:'Fredoka One',cursive;
-  font-size:18px;border:none;border-radius:16px;
-  cursor:pointer;transition:.2s;
-  box-shadow:0 6px 20px rgba(39,174,96,.35);
-}
-.btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(39,174,96,.45)}
-.btn-submit:active{transform:translateY(0)}
-.btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
-
-/* ── ROLETA ── */
-.roleta-section{display:none}
-.wheel-container{
-  display:flex;flex-direction:column;align-items:center;
-  padding:20px 0;
-}
-.wheel-wrap{
-  position:relative;width:280px;height:280px;
-  margin:0 auto 24px;
-}
-.wheel-pointer{
-  position:absolute;top:-12px;left:50%;transform:translateX(-50%);
-  z-index:10;font-size:32px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3));
-}
-.wheel-canvas{
-  width:280px;height:280px;
-  border-radius:50%;
-  box-shadow:0 0 0 8px #1A3F7A,0 0 0 12px #FFD54F,0 8px 30px rgba(0,0,0,.3);
-}
-.btn-spin{
-  padding:16px 48px;
-  background:linear-gradient(135deg,#E74C3C,#C0392B);
-  color:#fff;font-family:'Fredoka One',cursive;
-  font-size:20px;border:none;border-radius:16px;
-  cursor:pointer;transition:.2s;
-  box-shadow:0 6px 20px rgba(231,76,60,.4);
-}
-.btn-spin:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(231,76,60,.5)}
-.btn-spin:active{transform:translateY(0)}
-.btn-spin:disabled{opacity:.5;cursor:not-allowed;transform:none}
-
-/* ── RESULTADO ── */
-.result-overlay{
-  display:none;position:fixed;inset:0;z-index:1000;
-  background:rgba(0,0,0,.7);
-  align-items:center;justify-content:center;
-  padding:20px;
-}
-.result-overlay.show{display:flex}
-.result-card{
-  background:#fff;border-radius:24px;padding:36px 28px;
-  text-align:center;max-width:340px;width:100%;
-  animation:popIn .4s ease;
-}
-@keyframes popIn{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
-.result-emoji{font-size:56px;margin-bottom:12px}
-.result-title{font-family:'Fredoka One',cursive;font-size:22px;color:#1A3F7A;margin-bottom:8px}
-.result-msg{color:#666;font-size:14px;line-height:1.6;margin-bottom:20px}
-.result-prize{
-  font-family:'Fredoka One',cursive;font-size:28px;
-  color:#27AE60;margin-bottom:20px;
-}
-.btn-close-result{
-  padding:12px 32px;background:#1A3F7A;color:#fff;
-  font-family:'Fredoka One',cursive;font-size:16px;
-  border:none;border-radius:12px;cursor:pointer;
-}
-
-/* ── CONFETTI ── */
-.confetti-piece{
-  position:fixed;width:10px;height:10px;
-  top:-20px;z-index:1001;
-  animation:confettiFall 3s ease-in forwards;
-}
-@keyframes confettiFall{
-  0%{transform:translateY(0) rotate(0deg);opacity:1}
-  100%{transform:translateY(110vh) rotate(720deg);opacity:0}
-}
-
-/* ── CASINO BONUS ── */
-.casino-overlay{
-  display:none;position:fixed;inset:0;z-index:999;
-  background:rgba(0,0,0,.85);
-  align-items:center;justify-content:center;padding:20px;
-}
-.casino-overlay.show{display:flex}
-.casino-card{
-  background:linear-gradient(135deg,#1a1a2e,#16213e);
-  border:2px solid #FFD54F;border-radius:24px;
-  padding:32px 24px;text-align:center;
-  max-width:340px;width:100%;animation:popIn .4s ease;
-}
-.casino-title{font-family:'Fredoka One',cursive;font-size:20px;color:#FFD54F;margin-bottom:16px}
-.casino-slots{
-  display:flex;gap:8px;justify-content:center;margin-bottom:20px;
-}
-.slot-box{
-  width:64px;height:72px;background:#0B1D3A;
-  border:2px solid #FFD54F;border-radius:12px;
+.card-head{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.card-icon{
+  width:40px;height:40px;border-radius:12px;
   display:flex;align-items:center;justify-content:center;
-  font-size:36px;transition:.2s;
+  font-size:20px;
 }
-.casino-msg{color:#ddd;font-size:14px;margin-bottom:16px;line-height:1.5}
-.btn-casino{
-  padding:12px 32px;background:#FFD54F;color:#1a1a2e;
-  font-family:'Fredoka One',cursive;font-size:16px;
+.card-icon.form-icon{background:var(--sky)}
+.card-icon.wheel-icon{background:#FEF3C7}
+.card-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:800;color:var(--navy)}
+.card-desc{color:var(--gray600);font-size:13px;margin-bottom:22px;line-height:1.5;margin-left:50px}
+
+/* ═══ FORM ═══ */
+.fld{margin-bottom:16px}
+.fld label{
+  display:block;font-size:13px;font-weight:700;
+  color:var(--gray800);margin-bottom:6px;
+}
+.fld label .req{color:var(--red);margin-left:2px}
+.fld input,.fld select{
+  width:100%;padding:12px 14px;
+  background:var(--gray100);
+  border:1.5px solid var(--gray200);border-radius:12px;
+  font-size:15px;font-family:'Outfit',sans-serif;
+  color:var(--gray800);outline:none;transition:.2s;
+}
+.fld input::placeholder{color:var(--gray400)}
+.fld input:focus,.fld select:focus{
+  border-color:var(--blue);background:var(--white);
+  box-shadow:0 0 0 3px rgba(37,99,235,.1);
+}
+.fld select{
+  -webkit-appearance:none;appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394A3B8' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;
+}
+.fld select option{background:#fff;color:var(--gray800)}
+.fld-outro{display:none;margin-top:8px}
+.fld .err{color:var(--red);font-size:11px;margin-top:4px;display:none;font-weight:600}
+
+.btn-go{
+  width:100%;padding:14px;margin-top:4px;
+  background:var(--blue);color:#fff;
+  font-family:'Outfit',sans-serif;font-size:16px;font-weight:800;
   border:none;border-radius:12px;cursor:pointer;
+  transition:.2s;
+  box-shadow:0 4px 14px rgba(37,99,235,.25);
+}
+.btn-go:hover{background:#1D4FD7;transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,.3)}
+.btn-go:active{transform:translateY(0)}
+.btn-go:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* ═══ ROLETA ═══ */
+.sec-roleta{display:none}
+.wheel-stage{display:flex;flex-direction:column;align-items:center;padding:8px 0 12px}
+.wheel-box{position:relative;width:290px;height:290px;margin:0 auto 18px}
+.wheel-ring{
+  position:absolute;inset:-8px;border-radius:50%;
+  border:4px solid var(--navy);
+  box-shadow:0 4px 20px rgba(11,31,63,.2);
+}
+.wheel-dots{position:absolute;inset:-12px;pointer-events:none}
+.wheel-dot{
+  position:absolute;width:8px;height:8px;border-radius:50%;
+  animation:dotBlink 1.2s ease-in-out infinite alternate;
+}
+@keyframes dotBlink{0%{opacity:.3}100%{opacity:1}}
+.wheel-pointer{
+  position:absolute;top:-8px;left:50%;z-index:10;
+  transform:translateX(-50%);
+  width:0;height:0;
+  border-left:12px solid transparent;border-right:12px solid transparent;
+  border-top:20px solid var(--red);
+  filter:drop-shadow(0 2px 4px rgba(220,38,38,.4));
+}
+canvas.wheel{width:290px;height:290px;border-radius:50%}
+
+.btn-spin{
+  padding:14px 48px;
+  background:var(--green);color:#fff;
+  font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;
+  letter-spacing:.5px;
+  border:none;border-radius:14px;cursor:pointer;
+  transition:.2s;
+  box-shadow:0 4px 16px rgba(5,150,105,.3);
+  animation:spinPulse 2.5s ease-in-out infinite;
+}
+@keyframes spinPulse{0%,100%{box-shadow:0 4px 16px rgba(5,150,105,.3)}50%{box-shadow:0 6px 24px rgba(5,150,105,.45)}}
+.btn-spin:hover{background:#047857;transform:translateY(-1px)}
+.btn-spin:active{transform:translateY(0)}
+.btn-spin:disabled{opacity:.4;cursor:not-allowed;transform:none;animation:none}
+
+.spin-note{text-align:center;margin-top:12px;font-size:12px;color:var(--gray400)}
+.spin-note strong{color:var(--green)}
+
+/* ═══ OVERLAYS ═══ */
+.ov{
+  display:none;position:fixed;inset:0;z-index:2000;
+  background:rgba(11,31,63,.75);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;padding:16px;
+}
+.ov.show{display:flex}
+
+/* Result */
+.res-card{
+  background:var(--white);border-radius:24px;
+  padding:34px 24px;text-align:center;
+  max-width:370px;width:100%;
+  animation:cardUp .45s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 20px 60px rgba(0,0,0,.2);
+  position:relative;overflow:hidden;
+}
+@keyframes cardUp{from{transform:translateY(40px) scale(.9);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+.res-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--blue),var(--green),var(--yellow));
+}
+.res-emoji{font-size:64px;margin-bottom:10px}
+.res-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:800;color:var(--navy);margin-bottom:6px}
+.res-prize{
+  font-family:'Playfair Display',serif;font-size:36px;font-weight:900;
+  color:var(--green);margin-bottom:10px;
+}
+.res-msg{color:var(--gray600);font-size:13px;line-height:1.6;margin-bottom:22px}
+.btn-res{
+  padding:12px 32px;background:var(--blue);color:#fff;
+  font-family:'Outfit',sans-serif;font-weight:700;font-size:15px;
+  border:none;border-radius:12px;cursor:pointer;
+  box-shadow:0 3px 12px rgba(37,99,235,.25);transition:.2s;
+}
+.btn-res:hover{transform:translateY(-1px)}
+
+/* Casino / Referral */
+.cas-card{
+  background:var(--navy);border-radius:24px;
+  padding:30px 22px;text-align:center;
+  max-width:370px;width:100%;
+  animation:cardUp .45s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+  position:relative;overflow:hidden;
+}
+.cas-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--yellow),var(--green),var(--blue));
+}
+.cas-header{
+  font-family:'Playfair Display',serif;font-size:22px;font-weight:800;
+  color:var(--yellow-light);margin-bottom:6px;
+}
+.cas-sub{color:var(--blue-light);font-size:13px;margin-bottom:18px;line-height:1.5}
+.slots-row{display:flex;gap:10px;justify-content:center;margin-bottom:18px}
+.slot{
+  width:64px;height:72px;
+  background:rgba(255,255,255,.06);
+  border:2px solid rgba(255,255,255,.12);border-radius:14px;
+  display:flex;align-items:center;justify-content:center;font-size:34px;
+}
+.cas-cta{
+  font-weight:800;font-size:15px;
+  color:var(--green-light);margin-bottom:4px;
+}
+.cas-info{color:var(--gray400);font-size:11px;margin-bottom:16px;line-height:1.5}
+
+.ref-box{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;padding:10px 12px;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.ref-box input{
+  flex:1;background:none;border:none;color:var(--yellow-light);
+  font-size:12px;font-family:'Outfit',sans-serif;outline:none;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.btn-copy{
+  padding:6px 14px;background:var(--yellow);color:var(--navy);
+  font-weight:800;font-size:12px;
+  border:none;border-radius:8px;cursor:pointer;white-space:nowrap;
+}
+.btn-wpp{
+  width:100%;padding:14px;
+  background:linear-gradient(135deg,#25D366,#128C7E);
+  color:#fff;font-weight:800;font-size:16px;
+  border:none;border-radius:14px;cursor:pointer;
+  box-shadow:0 4px 16px rgba(37,211,102,.25);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:.2s;
+}
+.btn-wpp:active{transform:scale(.97)}
+.btn-close{
+  margin-top:12px;background:none;border:none;
+  color:var(--gray400);font-size:12px;cursor:pointer;
+  text-decoration:underline;
 }
 
-/* ── REFERRAL ── */
-.ref-block{
-  margin-top:28px;padding:20px;
-  background:linear-gradient(135deg,#EBF5FB,#D6EAF8);
-  border-radius:16px;text-align:center;
+/* ═══ CONFETTI ═══ */
+.confetti{position:fixed;top:-20px;z-index:2001;pointer-events:none;animation:cfall 3.5s ease-in forwards}
+@keyframes cfall{0%{transform:translateY(0) rotate(0) scale(1);opacity:1}100%{transform:translateY(110vh) rotate(720deg) scale(.2);opacity:0}}
+
+/* ═══ TOAST ═══ */
+.toast{
+  position:fixed;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--navy);border-radius:12px;padding:11px 22px;
+  font-size:13px;font-weight:600;color:var(--yellow-light);
+  box-shadow:0 8px 30px rgba(0,0,0,.2);
+  z-index:3000;transition:.4s cubic-bezier(.34,1.56,.64,1);
+  opacity:0;pointer-events:none;
 }
-.ref-block p{font-size:13px;color:#1A3F7A;font-weight:700;margin-bottom:10px}
-.btn-share{
-  padding:10px 24px;background:#25D366;color:#fff;
-  font-family:'Fredoka One',cursive;font-size:14px;
-  border:none;border-radius:10px;cursor:pointer;
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* ═══ FOOTER ═══ */
+.footer{
+  text-align:center;padding:24px 20px 16px;
+  font-size:11px;color:var(--gray400);line-height:1.6;
 }
 </style>
 </head>
 <body>
 
-<!-- ══════ HERO ══════ -->
-<div class="hero">
-  <div class="school-icon">
-    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="20" y="50" width="80" height="55" rx="4" fill="#E8A735"/>
-      <rect x="25" y="55" width="70" height="50" rx="2" fill="#F5C542"/>
-      <polygon points="60,18 15,50 105,50" fill="#C0392B"/>
-      <polygon points="60,18 15,50 105,50" fill="#E74C3C" opacity=".7"/>
-      <rect x="48" y="75" width="24" height="30" rx="2" fill="#8B5E3C"/>
-      <rect x="58" y="88" width="3" height="3" rx="1.5" fill="#FFD54F"/>
-      <rect x="30" y="62" width="15" height="18" rx="2" fill="#5DADE2"/>
-      <rect x="75" y="62" width="15" height="18" rx="2" fill="#5DADE2"/>
-      <line x1="37.5" y1="62" x2="37.5" y2="80" stroke="#3498DB" stroke-width="1.5"/>
-      <line x1="30" y1="71" x2="45" y2="71" stroke="#3498DB" stroke-width="1.5"/>
-      <line x1="82.5" y1="62" x2="82.5" y2="80" stroke="#3498DB" stroke-width="1.5"/>
-      <line x1="75" y1="71" x2="90" y2="71" stroke="#3498DB" stroke-width="1.5"/>
-      <circle cx="60" cy="40" r="12" fill="#fff" stroke="#1A3F7A" stroke-width="2"/>
-      <line x1="60" y1="33" x2="60" y2="40" stroke="#1A3F7A" stroke-width="2" stroke-linecap="round"/>
-      <line x1="60" y1="40" x2="66" y2="43" stroke="#1A3F7A" stroke-width="2" stroke-linecap="round"/>
-    </svg>
-  </div>
-  <h1>Rede de <span>Secretários</span><br>de Educação</h1>
-  <p>Cadastre-se e concorra a R$100 no Pix! 💰</p>
+<div class="app" style="max-width:480px;margin:0 auto;padding-bottom:20px">
 
+  <!-- ═══ HERO ═══ -->
+  <div class="hero">
+    <span class="edu-float" style="top:15px;left:10px">📚</span>
+    <span class="edu-float" style="top:60px;right:12px;animation-delay:2s">🎓</span>
+    <span class="edu-float" style="bottom:55px;left:20px;animation-delay:4s">✏️</span>
+    <span class="edu-float" style="top:30px;right:40%;animation-delay:6s">📖</span>
+
+    <div class="logo-badge">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Book base -->
+        <rect x="10" y="22" width="40" height="28" rx="3" fill="#DBEAFE"/>
+        <rect x="10" y="22" width="20" height="28" rx="2" fill="#93C5FD"/>
+        <rect x="30" y="22" width="20" height="28" rx="2" fill="#BFDBFE"/>
+        <line x1="30" y1="22" x2="30" y2="50" stroke="#2563EB" stroke-width="1.5"/>
+        <!-- Graduation cap -->
+        <polygon points="30,8 10,18 30,26 50,18" fill="#0B1F3F"/>
+        <polygon points="30,8 10,18 30,26 50,18" fill="#163562" opacity=".5"/>
+        <rect x="29" y="18" width="2" height="12" fill="#0B1F3F"/>
+        <circle cx="30" cy="30" r="2.5" fill="#F59E0B"/>
+        <line x1="42" y1="18" x2="42" y2="28" stroke="#0B1F3F" stroke-width="1.5"/>
+        <rect x="39" y="28" width="6" height="3" rx="1" fill="#F59E0B"/>
+      </svg>
+    </div>
+
+    <div class="hero-label">🏛️ Rede Oficial</div>
+    <h1>União dos <em>Dirigentes</em><br>Municipais de Educação</h1>
+    <p class="hero-org">Cadastro de Secretários e Dirigentes</p>
+
+    <div class="prize-pill">
+      <span>🎁 Cadastre-se e concorra a R$100 no Pix!</span>
+    </div>
+  </div>
+
+  <!-- ═══ STEPS ═══ -->
   <div class="steps">
-    <button class="step-tab active" id="stepDados" onclick="showDados()">
-      <span class="step-num">1</span> Dados
-    </button>
-    <button class="step-tab inactive" id="stepRoleta" disabled>
-      <span class="step-num">2</span> Roleta
-    </button>
-  </div>
-</div>
-
-<!-- ══════ FORMULÁRIO ══════ -->
-<div class="card" id="cardDados">
-  <div class="card-title">📋 Seu Cadastro</div>
-  <p class="card-sub">Preencha para entrar na rede oficial de comunicação.</p>
-
-  <div class="field">
-    <label>👤 Nome completo</label>
-    <input type="text" id="nome" placeholder="Ex: Maria da Silva">
+    <button class="step-pill on" id="s1"><span class="sn">1</span>Cadastro</button>
+    <button class="step-pill off" id="s2" disabled><span class="sn">2</span>Roleta</button>
   </div>
 
-  <div class="field">
-    <label>🏙️ Cidade</label>
-    <input type="text" id="cidade" placeholder="Ex: Salvador - BA">
-  </div>
-
-  <div class="field">
-    <label>💼 Função</label>
-    <select id="funcao">
-      <option value="">Selecione sua função</option>
-      <option value="Secretário(a) de Educação">Secretário(a) de Educação</option>
-      <option value="Subsecretário(a)">Subsecretário(a)</option>
-      <option value="Diretor(a)">Diretor(a)</option>
-      <option value="Coordenador(a)">Coordenador(a)</option>
-      <option value="Assessor(a)">Assessor(a)</option>
-      <option value="Outro">Outro</option>
-    </select>
-  </div>
-
-  <div class="field">
-    <label>📱 WhatsApp</label>
-    <input type="tel" id="whatsapp" placeholder="(00) 00000-0000" maxlength="15">
-  </div>
-
-  <button class="btn-submit" id="btnSubmit" onclick="enviarCadastro()">
-    Cadastrar e Girar a Roleta 🎰
-  </button>
-</div>
-
-<!-- ══════ ROLETA ══════ -->
-<div class="card roleta-section" id="cardRoleta">
-  <div class="card-title">🎰 Gire a Roleta!</div>
-  <p class="card-sub">Tente a sorte e concorra a prêmios via Pix!</p>
-
-  <div class="wheel-container">
-    <div class="wheel-wrap">
-      <div class="wheel-pointer">🔻</div>
-      <canvas class="wheel-canvas" id="wheelCanvas" width="280" height="280"></canvas>
+  <!-- ═══ FORM ═══ -->
+  <div class="card" id="secForm">
+    <div class="card-head">
+      <div class="card-icon form-icon">📋</div>
+      <div class="card-title">Seu Cadastro</div>
     </div>
-    <button class="btn-spin" id="btnSpin" onclick="spinWheel()">GIRAR! 🎯</button>
-  </div>
+    <p class="card-desc">Preencha para integrar a rede e participar do sorteio.</p>
 
-  <div class="ref-block">
-    <p>📢 Indique colegas e ganhe mais chances!</p>
-    <button class="btn-share" onclick="compartilhar()">Compartilhar no WhatsApp 💬</button>
-  </div>
-</div>
-
-<!-- ══════ RESULTADO ══════ -->
-<div class="result-overlay" id="resultOverlay">
-  <div class="result-card">
-    <div class="result-emoji" id="resultEmoji">🎉</div>
-    <div class="result-title" id="resultTitle">Parabéns!</div>
-    <div class="result-prize" id="resultPrize"></div>
-    <div class="result-msg" id="resultMsg">Você foi cadastrado com sucesso!</div>
-    <button class="btn-close-result" onclick="fecharResultado()">Entendi! ✅</button>
-  </div>
-</div>
-
-<!-- ══════ CASINO BONUS ══════ -->
-<div class="casino-overlay" id="casinoOverlay">
-  <div class="casino-card">
-    <div class="casino-title">🎰 BÔNUS ESPECIAL!</div>
-    <div class="casino-slots">
-      <div class="slot-box" id="slot1">🍒</div>
-      <div class="slot-box" id="slot2">🍒</div>
-      <div class="slot-box" id="slot3">🍒</div>
+    <div class="fld">
+      <label>Nome completo<span class="req">*</span></label>
+      <input type="text" id="iNome" placeholder="Ex: Maria da Silva" autocomplete="name">
+      <div class="err" id="eNome"></div>
     </div>
-    <div class="casino-msg" id="casinoMsg">Você desbloqueou uma chance extra!</div>
-    <button class="btn-casino" onclick="fecharCasino()">Continuar 🎯</button>
+    <div class="fld">
+      <label>Cidade / UF<span class="req">*</span></label>
+      <input type="text" id="iCidade" placeholder="Ex: Salvador - BA">
+      <div class="err" id="eCidade"></div>
+    </div>
+    <div class="fld">
+      <label>Função<span class="req">*</span></label>
+      <select id="iFuncao">
+        <option value="">Selecione sua função</option>
+        <option>Secretário(a) de Educação</option>
+        <option>Dirigente Municipal de Educação</option>
+        <option>Subsecretário(a)</option>
+        <option>Diretor(a)</option>
+        <option>Coordenador(a)</option>
+        <option>Assessor(a)</option>
+        <option value="Outro">Outro</option>
+      </select>
+      <input type="text" class="fld-outro" id="iOutro" placeholder="Qual sua função?">
+      <div class="err" id="eFuncao"></div>
+    </div>
+    <div class="fld">
+      <label>WhatsApp<span class="req">*</span></label>
+      <input type="tel" id="iWhats" placeholder="(00) 00000-0000" maxlength="15" autocomplete="tel">
+      <div class="err" id="eWhats"></div>
+    </div>
+
+    <button class="btn-go" id="btnGo" onclick="doSubmit()">
+      Cadastrar e Girar a Roleta 🎯
+    </button>
+  </div>
+
+  <!-- ═══ ROLETA ═══ -->
+  <div class="card sec-roleta" id="secRoleta">
+    <div class="card-head">
+      <div class="card-icon wheel-icon">🎯</div>
+      <div class="card-title">Roleta da Sorte</div>
+    </div>
+    <p class="card-desc">Gire e descubra se você é o ganhador do Pix!</p>
+
+    <div class="wheel-stage">
+      <div class="wheel-box">
+        <div class="wheel-ring"></div>
+        <div class="wheel-dots" id="wheelDots"></div>
+        <div class="wheel-pointer"></div>
+        <canvas class="wheel" id="cvWheel" width="290" height="290"></canvas>
+      </div>
+      <button class="btn-spin" id="btnSpin" onclick="spin()">🎯 Girar a Roleta!</button>
+      <p class="spin-note">Você tem <strong>1 chance</strong> — boa sorte!</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    União dos Dirigentes Municipais de Educação<br>
+    Rede de comunicação oficial entre secretários e dirigentes
   </div>
 </div>
 
+<!-- ═══ RESULT ═══ -->
+<div class="ov" id="ovRes">
+  <div class="res-card">
+    <div class="res-emoji" id="rE">🎉</div>
+    <div class="res-title" id="rT">Parabéns!</div>
+    <div class="res-prize" id="rP"></div>
+    <div class="res-msg" id="rM"></div>
+    <button class="btn-res" onclick="closeRes()">Continuar →</button>
+  </div>
+</div>
+
+<!-- ═══ CASINO / REFERRAL ═══ -->
+<div class="ov" id="ovCas">
+  <div class="cas-card">
+    <div class="cas-header">🏆 Sorteio de Indicações!</div>
+    <p class="cas-sub">Indique colegas dirigentes e concorra a um<br>prêmio exclusivo para indicadores!</p>
+
+    <div class="slots-row">
+      <div class="slot" id="sl1">📚</div>
+      <div class="slot" id="sl2">🏆</div>
+      <div class="slot" id="sl3">📚</div>
+    </div>
+
+    <div class="cas-cta">📢 Mais indicações = Mais chances!</div>
+    <p class="cas-info">Cada colega que se cadastrar pelo seu link conta como uma indicação no ranking do sorteio.</p>
+
+    <div class="ref-box">
+      <input type="text" id="refInp" readonly>
+      <button class="btn-copy" onclick="copyRef()">Copiar</button>
+    </div>
+
+    <button class="btn-wpp" onclick="shareWpp()">📲 Enviar pelo WhatsApp</button>
+    <button class="btn-close" onclick="closeCas()">Fechar</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-/* ══════ MÁSCARA WHATSAPP ══════ */
-document.getElementById('whatsapp').addEventListener('input', function(e){
-  let v = e.target.value.replace(/\D/g,'');
-  if(v.length > 11) v = v.slice(0,11);
-  if(v.length > 7) v = '('+v.slice(0,2)+') '+v.slice(2,7)+'-'+v.slice(7);
-  else if(v.length > 2) v = '('+v.slice(0,2)+') '+v.slice(2);
-  else if(v.length > 0) v = '('+v;
-  e.target.value = v;
+/* ═══════════════════════════════
+   ⚙️ CONFIGURAÇÃO — MUDE AQUI
+   ═══════════════════════════════ */
+const SUPABASE_URL  = 'https://wxpysrhnzaulofnmluye.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind4cHlzcmhuemF1bG9mbm1sdXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1NDE0MjIsImV4cCI6MjA5MDExNzQyMn0.ZB8KmW-44clYRljVaYtg2CX0sc-faQyT4uzr36RdgJ8';
+const EVENTO_ID     = 1;
+const PAGE_URL      = location.origin + location.pathname;
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+let userData = null, spun = false;
+const refParam = new URLSearchParams(location.search).get('ref');
+
+/* ═══ WHEEL DOTS ═══ */
+!function(){
+  const el=document.getElementById('wheelDots');
+  const colors=['var(--blue)','var(--yellow)','var(--green)','var(--red)'];
+  for(let i=0;i<20;i++){
+    const d=document.createElement('div');d.className='wheel-dot';
+    const a=(i/20)*360,rad=a*Math.PI/180,r=152;
+    d.style.left=(145+r*Math.cos(rad)-4)+'px';
+    d.style.top=(145+r*Math.sin(rad)-4)+'px';
+    d.style.background=colors[i%colors.length];
+    d.style.boxShadow=`0 0 6px ${colors[i%colors.length]}`;
+    d.style.animationDelay=(i*.1)+'s';
+    el.appendChild(d);
+  }
+}();
+
+/* ═══ OUTRO TOGGLE ═══ */
+document.getElementById('iFuncao').addEventListener('change',function(){
+  document.querySelector('.fld-outro').style.display=this.value==='Outro'?'block':'none';
 });
 
-/* ══════ ENVIAR CADASTRO ══════ */
-function enviarCadastro(){
-  const nome = document.getElementById('nome').value.trim();
-  const cidade = document.getElementById('cidade').value.trim();
-  const funcao = document.getElementById('funcao').value;
-  const whatsapp = document.getElementById('whatsapp').value.trim();
+/* ═══ MASK ═══ */
+document.getElementById('iWhats').addEventListener('input',function(e){
+  let v=e.target.value.replace(/\D/g,'');
+  if(v.length>11)v=v.slice(0,11);
+  if(v.length>7)v='('+v.slice(0,2)+') '+v.slice(2,7)+'-'+v.slice(7);
+  else if(v.length>2)v='('+v.slice(0,2)+') '+v.slice(2);
+  else if(v.length>0)v='('+v;
+  e.target.value=v;
+});
 
-  if(!nome || !cidade || !funcao || !whatsapp){
-    alert('Por favor, preencha todos os campos!');
-    return;
+/* ═══ VALIDATION ═══ */
+function sE(id,m){const e=document.getElementById(id);e.textContent=m;e.style.display='block'}
+function hE(id){document.getElementById(id).style.display='none'}
+function cE(){['eNome','eCidade','eFuncao','eWhats'].forEach(hE)}
+function validate(){
+  cE();let ok=true;
+  const n=document.getElementById('iNome').value.trim();
+  const c=document.getElementById('iCidade').value.trim();
+  const f=document.getElementById('iFuncao').value;
+  const o=document.getElementById('iOutro').value.trim();
+  const w=document.getElementById('iWhats').value.replace(/\D/g,'');
+  if(!n||n.length<3){sE('eNome','Preencha seu nome completo');ok=false}
+  else if(/\d/.test(n)){sE('eNome','Nome não pode conter números');ok=false}
+  if(!c){sE('eCidade','Preencha sua cidade');ok=false}
+  if(!f){sE('eFuncao','Selecione sua função');ok=false}
+  else if(f==='Outro'&&!o){sE('eFuncao','Informe sua função');ok=false}
+  if(w.length<10||w.length>11){sE('eWhats','WhatsApp inválido');ok=false}
+  return ok;
+}
+
+/* ═══ SUBMIT ═══ */
+async function doSubmit(){
+  if(!validate())return;
+  const btn=document.getElementById('btnGo');
+  btn.disabled=true;btn.textContent='Cadastrando...';
+  const nome=document.getElementById('iNome').value.trim();
+  const cidade=document.getElementById('iCidade').value.trim();
+  let funcao=document.getElementById('iFuncao').value;
+  if(funcao==='Outro')funcao=document.getElementById('iOutro').value.trim();
+  const whatsapp=document.getElementById('iWhats').value.replace(/\D/g,'');
+  try{
+    const {data:dup}=await sb.from('cadastros').select('id').eq('whatsapp',whatsapp).eq('evento_id',EVENTO_ID).maybeSingle();
+    if(dup){btn.disabled=false;btn.textContent='Cadastrar e Girar a Roleta 🎯';sE('eWhats','Este WhatsApp já foi cadastrado neste evento!');return}
+    const {data:row,error}=await sb.from('cadastros').insert({nome,cidade,funcao,whatsapp,evento_id:EVENTO_ID,referido_por:refParam||null}).select().single();
+    if(error)throw error;
+    userData=row;goRoleta();
+  }catch(err){
+    console.error(err);toast('Erro ao cadastrar. Tente novamente!');
+    btn.disabled=false;btn.textContent='Cadastrar e Girar a Roleta 🎯';
   }
-  if(whatsapp.replace(/\D/g,'').length < 10){
-    alert('WhatsApp inválido! Verifique o número.');
-    return;
-  }
-
-  const btn = document.getElementById('btnSubmit');
-  btn.disabled = true;
-  btn.textContent = 'Cadastrando...';
-
-  /* Salvar dados (localStorage como fallback simples) */
-  const dados = {nome, cidade, funcao, whatsapp, data: new Date().toISOString()};
-  const lista = JSON.parse(localStorage.getItem('cadastros') || '[]');
-  lista.push(dados);
-  localStorage.setItem('cadastros', JSON.stringify(lista));
-
-  setTimeout(()=>{
-    goToRoleta();
-  }, 800);
 }
 
-/* ══════ NAVEGAÇÃO ══════ */
-function goToRoleta(){
-  document.getElementById('cardDados').style.display = 'none';
-  document.getElementById('cardRoleta').style.display = 'block';
-  document.getElementById('stepDados').className = 'step-tab inactive';
-  document.getElementById('stepRoleta').className = 'step-tab active';
-  document.getElementById('stepRoleta').disabled = false;
-  drawWheel();
+/* ═══ NAV ═══ */
+function goRoleta(){
+  document.getElementById('secForm').style.display='none';
+  document.getElementById('secRoleta').style.display='block';
+  document.getElementById('s1').className='step-pill off';
+  document.getElementById('s2').className='step-pill on';
+  document.getElementById('s2').disabled=false;
+  drawWheel();window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function showDados(){
-  document.getElementById('cardDados').style.display = 'block';
-  document.getElementById('cardRoleta').style.display = 'none';
-  document.getElementById('stepDados').className = 'step-tab active';
-  document.getElementById('stepRoleta').className = 'step-tab inactive';
-}
-
-/* ══════ ROLETA CANVAS ══════ */
-const premios = [
-  {label:'R$100', cor:'#E74C3C', chance:2},
-  {label:'R$50',  cor:'#F39C12', chance:5},
-  {label:'R$20',  cor:'#27AE60', chance:10},
-  {label:'R$10',  cor:'#3498DB', chance:15},
-  {label:'R$5',   cor:'#9B59B6', chance:25},
-  {label:'Tente\noutra vez', cor:'#95A5A6', chance:43},
+/* ═══ WHEEL ═══ */
+const SEGS=[
+  {label:'R$100\nPIX! 🎉',  color:'#059669', accent:'#34D399'},
+  {label:'Quase!',           color:'#1E40AF', accent:'#3B82F6'},
+  {label:'Tente\noutra vez', color:'#334155', accent:'#475569'},
+  {label:'Boa\nsorte!',      color:'#B45309', accent:'#F59E0B'},
+  {label:'Quase\nlá!',       color:'#6D28D9', accent:'#8B5CF6'},
+  {label:'Tente\noutra vez', color:'#334155', accent:'#475569'},
+  {label:'Quase!',           color:'#0E7490', accent:'#22D3EE'},
+  {label:'Tente\noutra vez', color:'#374151', accent:'#6B7280'},
 ];
+const NS=SEGS.length,ARC=Math.PI*2/NS;
+let wA=0,spinning=false;
 
-let currentAngle = 0;
-let spinning = false;
-
-function drawWheel(angle){
-  const canvas = document.getElementById('wheelCanvas');
-  const ctx = canvas.getContext('2d');
-  const cx = 140, cy = 140, r = 130;
-  const total = premios.length;
-  const arc = (Math.PI * 2) / total;
-
-  ctx.clearRect(0, 0, 280, 280);
-  ctx.save();
-  ctx.translate(cx, cy);
-  ctx.rotate(angle || 0);
-  ctx.translate(-cx, -cy);
-
-  for(let i = 0; i < total; i++){
-    const startAngle = i * arc;
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.arc(cx, cy, r, startAngle, startAngle + arc);
-    ctx.fillStyle = premios[i].cor;
-    ctx.fill();
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    /* Texto */
-    ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(startAngle + arc / 2);
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 14px Nunito, sans-serif';
-    const lines = premios[i].label.split('\n');
-    lines.forEach((line, li) => {
-      ctx.fillText(line, r * 0.65, 5 + (li - (lines.length-1)/2) * 16);
-    });
+function drawWheel(a){
+  const cv=document.getElementById('cvWheel'),ctx=cv.getContext('2d');
+  const cx=145,cy=145,r=140;
+  ctx.clearRect(0,0,290,290);
+  ctx.save();ctx.translate(cx,cy);ctx.rotate(a||0);ctx.translate(-cx,-cy);
+  for(let i=0;i<NS;i++){
+    const sa=i*ARC;
+    const g=ctx.createRadialGradient(cx,cy,15,cx,cy,r);
+    g.addColorStop(0,SEGS[i].accent);g.addColorStop(1,SEGS[i].color);
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,sa,sa+ARC);
+    ctx.fillStyle=g;ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,.15)';ctx.lineWidth=1.5;ctx.stroke();
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(sa+ARC/2);
+    ctx.textAlign='center';ctx.fillStyle='#fff';
+    ctx.font='bold 12px Outfit,sans-serif';
+    ctx.shadowColor='rgba(0,0,0,.4)';ctx.shadowBlur=3;
+    const ln=SEGS[i].label.split('\n');
+    ln.forEach((l,j)=>{ctx.fillText(l,r*.6,4+(j-(ln.length-1)/2)*15)});
     ctx.restore();
   }
   ctx.restore();
-
-  /* Centro */
-  ctx.beginPath();
-  ctx.arc(cx, cy, 18, 0, Math.PI * 2);
-  ctx.fillStyle = '#1A3F7A';
-  ctx.fill();
-  ctx.strokeStyle = '#FFD54F';
-  ctx.lineWidth = 3;
-  ctx.stroke();
+  // hub
+  ctx.beginPath();ctx.arc(cx,cy,20,0,Math.PI*2);
+  ctx.fillStyle='#0B1F3F';ctx.fill();
+  ctx.strokeStyle='#2563EB';ctx.lineWidth=2;ctx.stroke();
+  ctx.font='14px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.shadowBlur=0;ctx.fillText('🎓',cx,cy);
 }
 
-function spinWheel(){
-  if(spinning) return;
-  spinning = true;
-  document.getElementById('btnSpin').disabled = true;
-
-  /* Escolher prêmio por chance ponderada */
-  const rand = Math.random() * 100;
-  let acc = 0, chosen = premios.length - 1;
-  for(let i = 0; i < premios.length; i++){
-    acc += premios[i].chance;
-    if(rand <= acc){ chosen = i; break; }
+async function spin(){
+  if(spinning||spun)return;
+  spinning=true;spun=true;
+  document.getElementById('btnSpin').disabled=true;
+  let ganhou=false;
+  try{
+    const {data,error}=await sb.rpc('tentar_ganhar',{p_evento_id:EVENTO_ID,p_cadastro_id:userData.id,p_nome:userData.nome});
+    if(!error&&data===true)ganhou=true;
+  }catch(e){console.error(e)}
+  const target=ganhou?0:[1,2,3,4,5,6,7][Math.floor(Math.random()*7)];
+  const tAngle=-target*ARC-ARC/2-Math.PI/2;
+  const fullSpins=7*Math.PI*2,delta=fullSpins+tAngle-wA;
+  const dur=5000,t0=performance.now(),a0=wA;
+  function anim(now){
+    const p=Math.min((now-t0)/dur,1);
+    wA=a0+delta*(1-Math.pow(1-p,4));
+    drawWheel(wA);
+    if(p<1)requestAnimationFrame(anim);
+    else{spinning=false;showRes(ganhou)}
   }
-
-  const total = premios.length;
-  const arc = (Math.PI * 2) / total;
-  /* Ângulo final: o prêmio chosen deve ficar no topo (posição do ponteiro = -PI/2) */
-  const targetAngle = -chosen * arc - arc / 2 - Math.PI / 2;
-  const fullSpins = 5 * Math.PI * 2;
-  const finalAngle = fullSpins + targetAngle - currentAngle;
-
-  const duration = 4000;
-  const start = performance.now();
-  const startAngle = currentAngle;
-
-  function animate(now){
-    const elapsed = now - start;
-    const progress = Math.min(elapsed / duration, 1);
-    /* Easing: ease-out cubic */
-    const eased = 1 - Math.pow(1 - progress, 3);
-    currentAngle = startAngle + finalAngle * eased;
-    drawWheel(currentAngle);
-
-    if(progress < 1){
-      requestAnimationFrame(animate);
-    } else {
-      spinning = false;
-      showResult(chosen);
-    }
-  }
-  requestAnimationFrame(animate);
+  requestAnimationFrame(anim);
 }
 
-function showResult(idx){
-  const premio = premios[idx];
-  const overlay = document.getElementById('resultOverlay');
-  const isWin = !premio.label.includes('Tente');
+function showRes(g){
+  document.getElementById('rE').textContent=g?'🎉':'😊';
+  document.getElementById('rT').textContent=g?'Parabéns, você ganhou!':'Não foi dessa vez!';
+  document.getElementById('rP').textContent=g?'R$ 100,00':'';
+  document.getElementById('rP').style.display=g?'block':'none';
+  document.getElementById('rM').textContent=g
+    ?'Entraremos em contato pelo WhatsApp cadastrado para enviar o Pix!'
+    :'Você já faz parte da rede! Indique colegas e concorra ao sorteio de indicadores.';
+  document.getElementById('ovRes').classList.add('show');
+  if(g)fireConfetti();
+}
+function closeRes(){document.getElementById('ovRes').classList.remove('show');openCas()}
 
-  document.getElementById('resultEmoji').textContent = isWin ? '🎉' : '😅';
-  document.getElementById('resultTitle').textContent = isWin ? 'Parabéns!' : 'Quase lá!';
-  document.getElementById('resultPrize').textContent = isWin ? premio.label : '';
-  document.getElementById('resultPrize').style.display = isWin ? 'block' : 'none';
-  document.getElementById('resultMsg').textContent = isWin
-    ? 'Você ganhou! Entraremos em contato pelo WhatsApp para enviar seu Pix.'
-    : 'Não foi dessa vez, mas você já está cadastrado na rede! Indique amigos para ganhar mais chances.';
-
-  overlay.classList.add('show');
-
-  if(isWin) launchConfetti();
+function openCas(){
+  const pool=['📚','🎓','🏆','📖','✏️','🎯','⭐','🏅'];
+  const rn=()=>pool[Math.floor(Math.random()*pool.length)];
+  const s1=document.getElementById('sl1'),s2=document.getElementById('sl2'),s3=document.getElementById('sl3');
+  let tk=0;
+  const iv=setInterval(()=>{s1.textContent=rn();s2.textContent=rn();s3.textContent=rn();tk++;if(tk>12){clearInterval(iv);s1.textContent='📚';s2.textContent='🏆';s3.textContent='📚'}},120);
+  document.getElementById('refInp').value=PAGE_URL+'?ref='+userData.whatsapp;
+  document.getElementById('ovCas').classList.add('show');
+}
+function closeCas(){document.getElementById('ovCas').classList.remove('show')}
+function copyRef(){const i=document.getElementById('refInp');i.select();navigator.clipboard.writeText(i.value).then(()=>toast('Link copiado! 📋'))}
+function shareWpp(){
+  const u=document.getElementById('refInp').value;
+  const m=encodeURIComponent(
+    '📚 *União dos Dirigentes Municipais de Educação*\n\n'+
+    'Cadastre-se na rede oficial e concorra a R$100 no Pix!\n'+
+    'Indique colegas para aumentar suas chances no sorteio!\n\n'+
+    '👉 '+u
+  );
+  window.open('https://wa.me/?text='+m,'_blank');
 }
 
-function fecharResultado(){
-  document.getElementById('resultOverlay').classList.remove('show');
-  document.getElementById('btnSpin').disabled = false;
-}
-
-/* ══════ CONFETTI ══════ */
-function launchConfetti(){
-  const colors = ['#E74C3C','#F39C12','#27AE60','#3498DB','#9B59B6','#FFD54F'];
-  for(let i = 0; i < 60; i++){
-    const piece = document.createElement('div');
-    piece.className = 'confetti-piece';
-    piece.style.left = Math.random() * 100 + 'vw';
-    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-    piece.style.animationDelay = Math.random() * 1.5 + 's';
-    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-    piece.style.width = (6 + Math.random() * 8) + 'px';
-    piece.style.height = (6 + Math.random() * 8) + 'px';
-    document.body.appendChild(piece);
-    setTimeout(()=> piece.remove(), 4500);
+function fireConfetti(){
+  const cols=['#2563EB','#059669','#F59E0B','#DC2626','#8B5CF6','#22D3EE'];
+  for(let i=0;i<80;i++){
+    const c=document.createElement('div');c.className='confetti';
+    c.style.left=Math.random()*100+'vw';
+    c.style.background=cols[Math.floor(Math.random()*cols.length)];
+    c.style.width=(5+Math.random()*10)+'px';c.style.height=(5+Math.random()*10)+'px';
+    c.style.borderRadius=Math.random()>.5?'50%':'2px';
+    c.style.animationDelay=Math.random()*2+'s';
+    document.body.appendChild(c);setTimeout(()=>c.remove(),5500);
   }
 }
 
-/* ══════ CASINO ══════ */
-function abrirCasino(){
-  const emojis = ['🍒','🍋','⭐','💎','7️⃣','🔔'];
-  document.getElementById('slot1').textContent = emojis[Math.floor(Math.random()*emojis.length)];
-  document.getElementById('slot2').textContent = emojis[Math.floor(Math.random()*emojis.length)];
-  document.getElementById('slot3').textContent = emojis[Math.floor(Math.random()*emojis.length)];
-  document.getElementById('casinoOverlay').classList.add('show');
-}
-function fecharCasino(){
-  document.getElementById('casinoOverlay').classList.remove('show');
-}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
 
-/* ══════ COMPARTILHAR ══════ */
-function compartilhar(){
-  const url = window.location.href;
-  const msg = encodeURIComponent('📚 Entre na Rede de Secretários de Educação e concorra a R$100 no Pix!\n\n👉 ' + url);
-  window.open('https://wa.me/?text=' + msg, '_blank');
-}
-
-/* ══════ INIT ══════ */
 drawWheel(0);
 </script>
 </body>
