@@ -407,13 +407,13 @@ async function submitForm(){
   const wpp    = document.getElementById('f-wpp').value.replace(/\D/g,'');
 
   try {
-    const { data, error } = await sb.from('secretarios').insert([
+    const { error } = await sb.from('secretarios').insert([
       { nome, cidade, funcao, whatsapp: wpp, evento: EVENTO_ID }
-    ]).select().single();
+    ]);
 
-    if(error && error.code !== '23505') throw error; // ignore duplicate
+    if(error && error.code !== '23505') throw error;
 
-    currentUser = { nome, cidade, funcao, wpp, id: data?.id };
+    currentUser = { nome, cidade, funcao, wpp };
     hideLoading();
     goToAvatar();
   } catch(e){
