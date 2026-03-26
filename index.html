@@ -2,787 +2,572 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rede Secretários de Educação 🎓</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Rede de Secretários de Educação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Nunito',sans-serif;background:#EBF3FF;min-height:100vh;overflow-x:hidden}
-:root{
-  --azul:#1a3a6b;--verde:#00C37A;--amarelo:#FFD93D;--laranja:#FF6B35;
-  --roxo:#7C3AED;--cinza:#F5F7FA;--branco:#fff;--borda:#E2E8F0;
-}
-
-/* ── CONFETTI ── */
-#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:9999}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Nunito',sans-serif;background:#0B1D3A;min-height:100vh;overflow-x:hidden}
 
 /* ── HERO ── */
 .hero{
-  background:linear-gradient(145deg,#1a3a6b 0%,#1D4ED8 100%);
-  padding:48px 20px 76px;text-align:center;position:relative;overflow:hidden
+  background:linear-gradient(135deg,#0F2B5C 0%,#1A3F7A 40%,#2056A0 100%);
+  padding:40px 20px 30px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
 }
 .hero::before{
   content:'';position:absolute;inset:0;
-  background:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='0.04'%3E%3Cpath d='M0 0h40v40H0zm40 40h40v40H40z'/%3E%3C/g%3E%3C/svg%3E")
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 60px),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 60px);
 }
-.hero-icon{font-size:62px;display:block;margin-bottom:14px;animation:float 3s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-.hero h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,6vw,44px);color:#fff;line-height:1.2;margin-bottom:10px}
-.hero h1 em{color:var(--amarelo);font-style:normal}
-.hero p{color:rgba(255,255,255,.82);font-size:15px;max-width:420px;margin:0 auto;font-weight:600}
+.school-icon{
+  width:100px;height:100px;margin:0 auto 16px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:1;
+}
+.school-icon svg{width:100%;height:100%}
+.hero h1{
+  font-family:'Fredoka One',cursive;
+  font-size:26px;color:#fff;line-height:1.3;
+  position:relative;z-index:1;
+}
+.hero h1 span{color:#FFD54F}
+.hero p{
+  color:#FFD54F;font-size:16px;font-weight:700;
+  margin-top:12px;position:relative;z-index:1;
+}
 
 /* ── STEPS ── */
-.steps{display:flex;max-width:460px;margin:-28px auto 0;padding:0 16px;gap:8px;position:relative;z-index:10}
-.step{
-  flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
-  padding:9px 4px;border-radius:50px;font-weight:800;font-size:11px;
-  background:var(--branco);color:#C0C0C0;box-shadow:0 4px 14px rgba(0,0,0,.1);transition:all .35s
+.steps{
+  display:flex;gap:8px;padding:0 20px;
+  margin-top:20px;position:relative;z-index:1;
 }
-.step.active{background:var(--verde);color:#fff}
-.step.done{background:var(--amarelo);color:var(--azul)}
-.step-n{
-  width:20px;height:20px;border-radius:50%;
-  background:rgba(0,0,0,.1);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800
+.step-tab{
+  flex:1;padding:12px;border-radius:30px;
+  font-weight:800;font-size:15px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  border:none;cursor:pointer;transition:.3s;
 }
+.step-num{
+  width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;
+}
+.step-tab.active{background:#27AE60;color:#fff}
+.step-tab.active .step-num{background:rgba(255,255,255,.25);color:#fff}
+.step-tab.inactive{background:rgba(255,255,255,.12);color:rgba(255,255,255,.5)}
+.step-tab.inactive .step-num{background:rgba(255,255,255,.1);color:rgba(255,255,255,.5)}
 
 /* ── CARD ── */
 .card{
-  background:var(--branco);border-radius:24px;padding:28px 24px;
-  max-width:460px;margin:22px auto;box-shadow:0 8px 40px rgba(26,58,107,.1)
+  background:#fff;margin:0;
+  border-radius:28px 28px 0 0;
+  padding:32px 22px 40px;
+  min-height:60vh;
+  margin-top:24px;
 }
-.card h2{font-family:'Fredoka One',cursive;color:var(--azul);font-size:22px;margin-bottom:4px}
-.card .sub{color:#888;font-size:14px;margin-bottom:22px}
+.card-title{
+  font-family:'Fredoka One',cursive;
+  font-size:22px;color:#1A3F7A;
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:6px;
+}
+.card-sub{color:#777;font-size:14px;margin-bottom:28px;line-height:1.5}
 
-/* ── FIELDS ── */
-.field{margin-bottom:16px}
-.field label{display:block;font-weight:700;color:var(--azul);font-size:13px;margin-bottom:5px}
+/* ── FORM ── */
+.field{margin-bottom:20px}
+.field label{
+  display:flex;align-items:center;gap:6px;
+  font-weight:700;font-size:14px;color:#333;margin-bottom:8px;
+}
 .field input,.field select{
-  width:100%;padding:13px 15px;border:2px solid var(--borda);border-radius:12px;
-  font-family:'Nunito',sans-serif;font-size:15px;color:#2d3748;background:var(--cinza);
-  outline:none;transition:border .2s,box-shadow .2s;appearance:none;-webkit-appearance:none
+  width:100%;padding:14px 16px;
+  border:2px solid #E0E4EA;border-radius:14px;
+  font-size:15px;font-family:'Nunito',sans-serif;
+  color:#333;background:#FAFBFC;
+  transition:.2s;outline:none;
 }
 .field input:focus,.field select:focus{
-  border-color:var(--verde);box-shadow:0 0 0 4px rgba(0,195,122,.14);background:#fff
+  border-color:#2056A0;background:#fff;
+  box-shadow:0 0 0 4px rgba(32,86,160,.1);
 }
-.field input::placeholder{color:#C0C4CC}
-.phone-row{display:flex;gap:8px}
-.phone-flag{
-  padding:13px 12px;background:var(--cinza);border:2px solid var(--borda);
-  border-radius:12px;font-size:18px;display:flex;align-items:center;white-space:nowrap
+.field input::placeholder{color:#B0B8C4}
+.field select{appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 16px center;
 }
-.err{color:#E53E3E;font-size:12px;margin-top:4px;display:none;font-weight:700}
 
-/* ── BUTTONS ── */
-.btn{
-  width:100%;padding:15px;border:none;border-radius:14px;
-  font-family:'Fredoka One',cursive;font-size:18px;cursor:pointer;transition:transform .15s,box-shadow .15s
+.btn-submit{
+  width:100%;padding:16px;margin-top:8px;
+  background:linear-gradient(135deg,#27AE60,#2ECC71);
+  color:#fff;font-family:'Fredoka One',cursive;
+  font-size:18px;border:none;border-radius:16px;
+  cursor:pointer;transition:.2s;
+  box-shadow:0 6px 20px rgba(39,174,96,.35);
 }
-.btn:active{transform:scale(.97)}
-.btn-green{background:linear-gradient(135deg,var(--verde),#00A066);color:#fff;box-shadow:0 5px 22px rgba(0,195,122,.3)}
-.btn-green:hover{box-shadow:0 7px 30px rgba(0,195,122,.45)}
-.btn-outline{background:var(--cinza);color:var(--azul);border:2px solid var(--borda)}
-
-/* ── AVATAR STAGE ── */
-#s-avatar{display:none}
-#s-avatar .card{text-align:center}
-/* ── AVATAR GHIBLI ── */
-.av-wrap{
-  width:160px;height:160px;border-radius:50%;
-  border:5px solid var(--amarelo);box-shadow:0 8px 28px rgba(0,0,0,.12);
-  margin:0 auto 14px;overflow:hidden;
-  animation:pop .5s cubic-bezier(.175,.885,.32,1.275);
-  background:var(--cinza);display:flex;align-items:center;justify-content:center;
-}
-#avatar{width:160px;height:160px;display:block;object-fit:cover}
-.av-loading{font-size:32px;animation:float 1.5s ease-in-out infinite}
-@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-.av-name{font-family:'Fredoka One',cursive;font-size:21px;color:var(--azul);margin-bottom:3px}
-.av-role{
-  display:inline-block;font-size:13px;font-weight:700;color:var(--verde);
-  background:rgba(0,195,122,.1);padding:3px 13px;border-radius:50px;margin-bottom:4px
-}
-.av-city{font-size:13px;color:#aaa;margin-bottom:16px}
-
-.spin-btn{
-  width:100%;padding:15px;border:none;border-radius:14px;
-  font-family:'Fredoka One',cursive;font-size:18px;cursor:pointer;
-  background:linear-gradient(135deg,var(--laranja),#D84315);color:#fff;
-  box-shadow:0 5px 22px rgba(255,107,53,.3);transition:transform .15s,box-shadow .15s;
-  margin-bottom:8px;
-}
-.spin-btn:hover{box-shadow:0 7px 30px rgba(255,107,53,.45)}
-.spin-btn:active{transform:scale(.97)}
-.spin-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(39,174,96,.45)}
+.btn-submit:active{transform:translateY(0)}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
 
 /* ── ROLETA ── */
-.wheel-wrap{position:relative;display:inline-block;margin-bottom:6px}
-#wheel{border-radius:50%;box-shadow:0 8px 36px rgba(26,58,107,.15);display:block}
-.ptr{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:30px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
-.spin-tip{font-size:13px;color:#aaa;margin-bottom:16px;font-weight:600;text-align:center}
-.spin-btn{
-  width:100%;padding:15px;border:none;border-radius:14px;
-  font-family:'Fredoka One',cursive;font-size:18px;cursor:pointer;
-  background:linear-gradient(135deg,var(--laranja),#D84315);color:#fff;
-  box-shadow:0 5px 22px rgba(255,107,53,.3);transition:transform .15s,box-shadow .15s;display:block
+.roleta-section{display:none}
+.wheel-container{
+  display:flex;flex-direction:column;align-items:center;
+  padding:20px 0;
 }
-.spin-btn:hover{box-shadow:0 7px 30px rgba(255,107,53,.45)}
-.spin-btn:active{transform:scale(.97)}
-.spin-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
-.winner-alert{
-  background:linear-gradient(135deg,#FFF3CD,#FFE082);
-  border-radius:14px;padding:14px 16px;margin-bottom:16px;display:none;text-align:left;
-  border:2px solid var(--amarelo)
+.wheel-wrap{
+  position:relative;width:280px;height:280px;
+  margin:0 auto 24px;
 }
-.winner-alert strong{display:block;color:var(--azul);font-size:14px;font-weight:800;margin-bottom:2px}
-.winner-alert span{font-size:13px;color:var(--azul);opacity:.8}
-.result-box{
-  border-radius:16px;padding:20px;margin-top:16px;display:none;
-  animation:pop .4s cubic-bezier(.175,.885,.32,1.275);text-align:center
+.wheel-pointer{
+  position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  z-index:10;font-size:32px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3));
 }
-.result-box.win{background:linear-gradient(135deg,var(--azul),#1D4ED8);color:#fff}
-.result-box.fun{background:linear-gradient(135deg,var(--amarelo),#FFCA28);color:var(--azul)}
-.result-box.taken{background:linear-gradient(135deg,#E8EAED,#D5DAE0);color:#444}
-.result-big{font-size:40px;margin-bottom:4px}
-.result-title{font-family:'Fredoka One',cursive;font-size:20px;margin-bottom:6px}
-.result-msg{font-size:13px;opacity:.85;line-height:1.5}
+.wheel-canvas{
+  width:280px;height:280px;
+  border-radius:50%;
+  box-shadow:0 0 0 8px #1A3F7A,0 0 0 12px #FFD54F,0 8px 30px rgba(0,0,0,.3);
+}
+.btn-spin{
+  padding:16px 48px;
+  background:linear-gradient(135deg,#E74C3C,#C0392B);
+  color:#fff;font-family:'Fredoka One',cursive;
+  font-size:20px;border:none;border-radius:16px;
+  cursor:pointer;transition:.2s;
+  box-shadow:0 6px 20px rgba(231,76,60,.4);
+}
+.btn-spin:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(231,76,60,.5)}
+.btn-spin:active{transform:translateY(0)}
+.btn-spin:disabled{opacity:.5;cursor:not-allowed;transform:none}
 
-/* ── CASINO POPUP ── */
+/* ── RESULTADO ── */
+.result-overlay{
+  display:none;position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,.7);
+  align-items:center;justify-content:center;
+  padding:20px;
+}
+.result-overlay.show{display:flex}
+.result-card{
+  background:#fff;border-radius:24px;padding:36px 28px;
+  text-align:center;max-width:340px;width:100%;
+  animation:popIn .4s ease;
+}
+@keyframes popIn{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.result-emoji{font-size:56px;margin-bottom:12px}
+.result-title{font-family:'Fredoka One',cursive;font-size:22px;color:#1A3F7A;margin-bottom:8px}
+.result-msg{color:#666;font-size:14px;line-height:1.6;margin-bottom:20px}
+.result-prize{
+  font-family:'Fredoka One',cursive;font-size:28px;
+  color:#27AE60;margin-bottom:20px;
+}
+.btn-close-result{
+  padding:12px 32px;background:#1A3F7A;color:#fff;
+  font-family:'Fredoka One',cursive;font-size:16px;
+  border:none;border-radius:12px;cursor:pointer;
+}
+
+/* ── CONFETTI ── */
+.confetti-piece{
+  position:fixed;width:10px;height:10px;
+  top:-20px;z-index:1001;
+  animation:confettiFall 3s ease-in forwards;
+}
+@keyframes confettiFall{
+  0%{transform:translateY(0) rotate(0deg);opacity:1}
+  100%{transform:translateY(110vh) rotate(720deg);opacity:0}
+}
+
+/* ── CASINO BONUS ── */
 .casino-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:900;
-  display:none;align-items:center;justify-content:center;padding:20px;
-  backdrop-filter:blur(4px)
+  display:none;position:fixed;inset:0;z-index:999;
+  background:rgba(0,0,0,.85);
+  align-items:center;justify-content:center;padding:20px;
 }
 .casino-overlay.show{display:flex}
-.casino-popup{
-  background:linear-gradient(145deg,#0f0c29,#1a1060,#24243e);
-  border-radius:24px;padding:32px 24px;text-align:center;max-width:360px;width:100%;
-  border:2px solid rgba(255,215,0,.4);
-  box-shadow:0 0 40px rgba(255,215,0,.2),0 0 80px rgba(124,58,237,.3);
-  animation:casinoPop .5s cubic-bezier(.175,.885,.32,1.275);
-  position:relative;overflow:hidden
+.casino-card{
+  background:linear-gradient(135deg,#1a1a2e,#16213e);
+  border:2px solid #FFD54F;border-radius:24px;
+  padding:32px 24px;text-align:center;
+  max-width:340px;width:100%;animation:popIn .4s ease;
 }
-@keyframes casinoPop{from{transform:scale(.5) rotate(-5deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
-.casino-popup::before{
-  content:'';position:absolute;inset:0;
-  background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(255,215,0,.03) 10px,rgba(255,215,0,.03) 20px);
-  pointer-events:none
+.casino-title{font-family:'Fredoka One',cursive;font-size:20px;color:#FFD54F;margin-bottom:16px}
+.casino-slots{
+  display:flex;gap:8px;justify-content:center;margin-bottom:20px;
 }
-.casino-neon{
-  font-family:'Fredoka One',cursive;
-  font-size:clamp(22px,6vw,30px);
-  color:#FFD700;
-  text-shadow:0 0 10px #FFD700,0 0 20px #FFD700,0 0 40px #FF8C00;
-  line-height:1.2;margin-bottom:8px;
-  animation:neonFlicker 2s infinite
+.slot-box{
+  width:64px;height:72px;background:#0B1D3A;
+  border:2px solid #FFD54F;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:36px;transition:.2s;
 }
-@keyframes neonFlicker{0%,100%{opacity:1}92%{opacity:1}93%{opacity:.7}94%{opacity:1}96%{opacity:.8}97%{opacity:1}}
-.casino-sub{color:rgba(255,255,255,.75);font-size:14px;font-weight:700;margin-bottom:20px;line-height:1.5}
-.casino-sub strong{color:#FFD700}
-.casino-coins{font-size:40px;animation:coinSpin 1s ease-in-out infinite alternate;display:block;margin-bottom:12px}
-@keyframes coinSpin{from{transform:rotateY(0deg) scale(1)}to{transform:rotateY(30deg) scale(1.1)}}
-.casino-stars{letter-spacing:4px;font-size:20px;margin-bottom:16px;animation:starPulse 1.2s infinite}
-@keyframes starPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.9)}}
+.casino-msg{color:#ddd;font-size:14px;margin-bottom:16px;line-height:1.5}
 .btn-casino{
-  width:100%;padding:15px;border:none;border-radius:14px;
-  font-family:'Fredoka One',cursive;font-size:18px;cursor:pointer;
-  background:linear-gradient(135deg,#FFD700,#FF8C00);
-  color:#1a0a00;
-  box-shadow:0 0 20px rgba(255,215,0,.5);
-  transition:transform .15s,box-shadow .15s;
-  margin-bottom:10px;
-  animation:btnPulse 1.5s infinite
+  padding:12px 32px;background:#FFD54F;color:#1a1a2e;
+  font-family:'Fredoka One',cursive;font-size:16px;
+  border:none;border-radius:12px;cursor:pointer;
 }
-@keyframes btnPulse{0%,100%{box-shadow:0 0 20px rgba(255,215,0,.5)}50%{box-shadow:0 0 35px rgba(255,215,0,.9)}}
-.btn-casino:active{transform:scale(.97)}
-.btn-casino-skip{
-  background:none;border:none;color:rgba(255,255,255,.4);
-  font-size:13px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;
-  padding:8px;width:100%
+
+/* ── REFERRAL ── */
+.ref-block{
+  margin-top:28px;padding:20px;
+  background:linear-gradient(135deg,#EBF5FB,#D6EAF8);
+  border-radius:16px;text-align:center;
 }
-.btn-casino-skip:hover{color:rgba(255,255,255,.7)}
-.casino-badge{
-  display:inline-block;background:rgba(255,215,0,.15);
-  border:1px solid rgba(255,215,0,.3);border-radius:8px;
-  padding:4px 12px;font-size:12px;color:#FFD700;font-weight:700;
-  margin-bottom:14px;letter-spacing:1px
+.ref-block p{font-size:13px;color:#1A3F7A;font-weight:700;margin-bottom:10px}
+.btn-share{
+  padding:10px 24px;background:#25D366;color:#fff;
+  font-family:'Fredoka One',cursive;font-size:14px;
+  border:none;border-radius:10px;cursor:pointer;
 }
 </style>
 </head>
 <body>
 
-<canvas id="confetti-canvas"></canvas>
-<div class="loading" id="loading"><div class="spinner"></div><p id="loading-txt">Salvando...</p></div>
-
-<!-- ── HERO ── -->
-<header class="hero">
-  <span class="hero-icon">🏫</span>
-  <h1>Rede de <em>Secretários</em><br>de Educação</h1>
-  <p>Cadastre-se e concorra a <strong style="color:var(--amarelo)">R$100 no Pix! 💰</strong></p>
-</header>
-
-<!-- ── STEPS ── -->
-<div class="steps">
-  <div class="step active" id="stp1"><div class="step-n">1</div> Dados</div>
-  <div class="step" id="stp3"><div class="step-n">2</div> Roleta</div>
-</div>
-
-<!-- ══ STAGE 1: FORM ══ -->
-<section id="s-form">
-  <div class="card">
-    <h2>📋 Seu Cadastro</h2>
-    <p class="sub">Preencha para entrar na rede oficial de comunicação.</p>
-
-    <div class="field">
-      <label>👤 Nome completo</label>
-      <input id="f-nome" type="text" placeholder="Ex: Maria da Silva" autocomplete="off">
-      <div class="err" id="e-nome">Informe seu nome completo.</div>
-    </div>
-
-    <div class="field">
-      <label>🏙️ Cidade</label>
-      <input id="f-cidade" type="text" placeholder="Ex: Salvador" autocomplete="off">
-      <div class="err" id="e-cidade">Informe sua cidade.</div>
-    </div>
-
-    <div class="field">
-      <label>🎓 Função</label>
-      <select id="f-funcao" onchange="toggleOutro(this.value)">
-        <option value="">Selecione sua função…</option>
-        <option>Secretário(a) de Educação</option>
-        <option>Secretário(a) Adjunto(a)</option>
-        <option>Diretor(a) de Educação</option>
-        <option>Coordenador(a) Pedagógico(a)</option>
-        <option>Técnico(a) de Educação</option>
-        <option>Outro</option>
-      </select>
-      <div class="err" id="e-funcao">Selecione sua função.</div>
-    </div>
-
-    <div class="field" id="field-outro" style="display:none;margin-top:-8px">
-      <label>✏️ Qual é a sua função?</label>
-      <input id="f-outro" type="text" placeholder="Ex: Assessor Pedagógico, Supervisor…" autocomplete="off">
-      <div class="err" id="e-outro">Descreva sua função.</div>
-    </div>
-
-    <div class="field">
-      <label>📱 WhatsApp</label>
-      <div class="phone-row">
-        <div class="phone-flag">🇧🇷 +55</div>
-        <input id="f-wpp" type="tel" placeholder="(11) 9 9999-9999" maxlength="16">
-      </div>
-      <div class="err" id="e-wpp">Número inválido. Use (DD) 9 XXXX-XXXX.</div>
-    </div>
-
-    <button class="btn btn-green" onclick="submitForm()">🚀 Entrar na Rede!</button>
+<!-- ══════ HERO ══════ -->
+<div class="hero">
+  <div class="school-icon">
+    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="50" width="80" height="55" rx="4" fill="#E8A735"/>
+      <rect x="25" y="55" width="70" height="50" rx="2" fill="#F5C542"/>
+      <polygon points="60,18 15,50 105,50" fill="#C0392B"/>
+      <polygon points="60,18 15,50 105,50" fill="#E74C3C" opacity=".7"/>
+      <rect x="48" y="75" width="24" height="30" rx="2" fill="#8B5E3C"/>
+      <rect x="58" y="88" width="3" height="3" rx="1.5" fill="#FFD54F"/>
+      <rect x="30" y="62" width="15" height="18" rx="2" fill="#5DADE2"/>
+      <rect x="75" y="62" width="15" height="18" rx="2" fill="#5DADE2"/>
+      <line x1="37.5" y1="62" x2="37.5" y2="80" stroke="#3498DB" stroke-width="1.5"/>
+      <line x1="30" y1="71" x2="45" y2="71" stroke="#3498DB" stroke-width="1.5"/>
+      <line x1="82.5" y1="62" x2="82.5" y2="80" stroke="#3498DB" stroke-width="1.5"/>
+      <line x1="75" y1="71" x2="90" y2="71" stroke="#3498DB" stroke-width="1.5"/>
+      <circle cx="60" cy="40" r="12" fill="#fff" stroke="#1A3F7A" stroke-width="2"/>
+      <line x1="60" y1="33" x2="60" y2="40" stroke="#1A3F7A" stroke-width="2" stroke-linecap="round"/>
+      <line x1="60" y1="40" x2="66" y2="43" stroke="#1A3F7A" stroke-width="2" stroke-linecap="round"/>
+    </svg>
   </div>
-</section>
+  <h1>Rede de <span>Secretários</span><br>de Educação</h1>
+  <p>Cadastre-se e concorra a R$100 no Pix! 💰</p>
 
-
-
-<!-- ══ STAGE 3: ROLETA ══ -->
-<section id="s-roleta" style="display:none">
-  <div class="card">
-    <h2>🎡 Roleta da Sorte</h2>
-    <p class="sub">1 sorteio por evento · Apenas um ganhador!</p>
-
-    <div class="winner-alert" id="winner-alert">
-      <strong>🏆 Já temos um ganhador!</strong>
-      <span id="winner-alert-txt">O prêmio já foi sorteado neste evento.</span>
-    </div>
-
-    <div class="wheel-wrap">
-      <div class="ptr">▼</div>
-      <canvas id="wheel" width="280" height="280"></canvas>
-    </div>
-    <p class="spin-tip" id="spin-tip">👆 Toque no botão para girar!</p>
-
-    <button class="spin-btn" id="spin-btn" onclick="spinWheel()">🎰 GIRAR!</button>
-
-    <div class="result-box" id="result-box">
-      <div class="result-big" id="res-emoji">🎉</div>
-      <div class="result-title" id="res-title">Parabéns!</div>
-      <div class="result-msg" id="res-msg">Você ganhou!</div>
-      <div class="result-btns" id="result-btns" style="display:none;margin-top:14px;gap:8px;flex-direction:column">
-        <button class="btn-wpp" onclick="shareResultWhatsApp()" style="width:100%;padding:12px;border:none;border-radius:12px;background:#25D366;color:#fff;font-family:'Fredoka One',cursive;font-size:15px;cursor:pointer">📤 Compartilhar resultado</button>
-      </div>
-      <!-- Referral block — shown after spin -->
-      <div id="ref-block" style="display:none;margin-top:18px;background:rgba(255,255,255,0.12);border-radius:14px;padding:16px;border:2px solid rgba(255,255,255,0.25)">
-        <div style="font-family:'Fredoka One',cursive;font-size:15px;margin-bottom:6px">🔗 Seu link de indicação</div>
-        <div style="font-size:12px;opacity:.8;margin-bottom:10px">Indique colegas e concorra ao <strong>sorteio exclusivo de indicadores!</strong></div>
-        <div id="ref-link-display" style="background:rgba(0,0,0,.2);border-radius:8px;padding:8px 10px;font-size:11px;word-break:break-all;margin-bottom:10px;font-family:monospace"></div>
-        <button onclick="copiarRefLink()" style="width:100%;padding:10px;border:none;border-radius:10px;background:var(--amarelo);color:var(--azul);font-family:'Fredoka One',cursive;font-size:14px;cursor:pointer;margin-bottom:6px">📋 Copiar link</button>
-        <button onclick="shareRefWhatsApp()" style="width:100%;padding:10px;border:none;border-radius:10px;background:#25D366;color:#fff;font-family:'Fredoka One',cursive;font-size:14px;cursor:pointer">📲 Enviar pelo WhatsApp</button>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ══ CASINO POPUP ══ -->
-<div class="casino-overlay" id="casino-overlay">
-  <div class="casino-popup">
-    <span class="casino-coins">🪙</span>
-    <div class="casino-stars">⭐ ⭐ ⭐</div>
-    <div class="casino-badge">🎰 SORTEIO EXCLUSIVO</div>
-    <div class="casino-neon">Tente a sua<br>sorte aqui!</div>
-    <p class="casino-sub">
-      Indique colegas e concorra ao<br>
-      <strong>sorteio exclusivo dos indicadores!</strong><br>
-      Quem mais indicar, mais chances tem! 🏆
-    </p>
-    <button class="btn-casino" onclick="fecharCasinoEMostrarRef()">
-      🔗 Quero meu link de indicação!
+  <div class="steps">
+    <button class="step-tab active" id="stepDados" onclick="showDados()">
+      <span class="step-num">1</span> Dados
     </button>
-    <button class="btn-casino-skip" onclick="fecharCasino()">Não, obrigado</button>
+    <button class="step-tab inactive" id="stepRoleta" disabled>
+      <span class="step-num">2</span> Roleta
+    </button>
   </div>
 </div>
 
-<footer>
-  Rede Oficial de Secretários de Educação · 2025
-  &nbsp;·&nbsp; <a href="admin.html">Admin</a>
-</footer>
+<!-- ══════ FORMULÁRIO ══════ -->
+<div class="card" id="cardDados">
+  <div class="card-title">📋 Seu Cadastro</div>
+  <p class="card-sub">Preencha para entrar na rede oficial de comunicação.</p>
 
-<!-- ── CDNs ── -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+  <div class="field">
+    <label>👤 Nome completo</label>
+    <input type="text" id="nome" placeholder="Ex: Maria da Silva">
+  </div>
+
+  <div class="field">
+    <label>🏙️ Cidade</label>
+    <input type="text" id="cidade" placeholder="Ex: Salvador - BA">
+  </div>
+
+  <div class="field">
+    <label>💼 Função</label>
+    <select id="funcao">
+      <option value="">Selecione sua função</option>
+      <option value="Secretário(a) de Educação">Secretário(a) de Educação</option>
+      <option value="Subsecretário(a)">Subsecretário(a)</option>
+      <option value="Diretor(a)">Diretor(a)</option>
+      <option value="Coordenador(a)">Coordenador(a)</option>
+      <option value="Assessor(a)">Assessor(a)</option>
+      <option value="Outro">Outro</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label>📱 WhatsApp</label>
+    <input type="tel" id="whatsapp" placeholder="(00) 00000-0000" maxlength="15">
+  </div>
+
+  <button class="btn-submit" id="btnSubmit" onclick="enviarCadastro()">
+    Cadastrar e Girar a Roleta 🎰
+  </button>
+</div>
+
+<!-- ══════ ROLETA ══════ -->
+<div class="card roleta-section" id="cardRoleta">
+  <div class="card-title">🎰 Gire a Roleta!</div>
+  <p class="card-sub">Tente a sorte e concorra a prêmios via Pix!</p>
+
+  <div class="wheel-container">
+    <div class="wheel-wrap">
+      <div class="wheel-pointer">🔻</div>
+      <canvas class="wheel-canvas" id="wheelCanvas" width="280" height="280"></canvas>
+    </div>
+    <button class="btn-spin" id="btnSpin" onclick="spinWheel()">GIRAR! 🎯</button>
+  </div>
+
+  <div class="ref-block">
+    <p>📢 Indique colegas e ganhe mais chances!</p>
+    <button class="btn-share" onclick="compartilhar()">Compartilhar no WhatsApp 💬</button>
+  </div>
+</div>
+
+<!-- ══════ RESULTADO ══════ -->
+<div class="result-overlay" id="resultOverlay">
+  <div class="result-card">
+    <div class="result-emoji" id="resultEmoji">🎉</div>
+    <div class="result-title" id="resultTitle">Parabéns!</div>
+    <div class="result-prize" id="resultPrize"></div>
+    <div class="result-msg" id="resultMsg">Você foi cadastrado com sucesso!</div>
+    <button class="btn-close-result" onclick="fecharResultado()">Entendi! ✅</button>
+  </div>
+</div>
+
+<!-- ══════ CASINO BONUS ══════ -->
+<div class="casino-overlay" id="casinoOverlay">
+  <div class="casino-card">
+    <div class="casino-title">🎰 BÔNUS ESPECIAL!</div>
+    <div class="casino-slots">
+      <div class="slot-box" id="slot1">🍒</div>
+      <div class="slot-box" id="slot2">🍒</div>
+      <div class="slot-box" id="slot3">🍒</div>
+    </div>
+    <div class="casino-msg" id="casinoMsg">Você desbloqueou uma chance extra!</div>
+    <button class="btn-casino" onclick="fecharCasino()">Continuar 🎯</button>
+  </div>
+</div>
+
 <script>
-/* ════════════════════════════════════════
-   ⚙️  CONFIGURAÇÃO — preencha suas chaves
-════════════════════════════════════════ */
-const SUPA_URL  = 'https://tzlcwpifvonttpcuihfc.supabase.co';
-const SUPA_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6bGN3cGlmdm9udHRwY3VpaGZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MzI2MzcsImV4cCI6MjA5MDEwODYzN30.ll1PycBOQ7MgTiSqPt1esfJ743CIg5GBkdH_fTvYD5Y';
-const EVENTO_ID = 'evento-2025-01';               // ← mude a cada evento
-
-/* ═══════════════ SUPABASE INIT ═══════════════ */
-const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
-
-/* ═══════════════ STATE ═══════════════ */
-let currentUser = {};
-let wheelRotation = 0;
-let isSpinning = false;
-let hasSpun = false;
-let wonPrize = false; // bloqueia novo giro após ganhar R$100
-
-// Captura código de referência da URL (?ref=CODIGO)
-const REF_CODE = new URLSearchParams(window.location.search).get('ref') || null;
-
-/* ═══════════════ SEGMENTS ═══════════════ */
-const SEGS = [
-  { label:['Participe','mais!'],   emoji:'🎉', color:'#4ECDC4' },
-  { label:['Ata','entregue!'],     emoji:'📋', color:'#F7B731' },
-  { label:['R$100','no Pix! 💰'],  emoji:'💸', color:'#FF6B6B', prize:true },
-  { label:['Destaque','do evento'],emoji:'🏆', color:'#A855F7' },
-  { label:['Continue','assim!'],   emoji:'⭐', color:'#3B82F6' },
-  { label:['Educação','em ação!'], emoji:'📚', color:'#10B981' },
-  { label:['Rede','ativa!'],       emoji:'🤝', color:'#F59E0B' },
-  { label:['Missão','cumprida!'],  emoji:'🎓', color:'#EC4899' },
-];
-
-/* ═══════════════ PHONE MASK ═══════════════ */
-document.getElementById('f-wpp').addEventListener('input', function(){
-  let v = this.value.replace(/\D/g,'');
+/* ══════ MÁSCARA WHATSAPP ══════ */
+document.getElementById('whatsapp').addEventListener('input', function(e){
+  let v = e.target.value.replace(/\D/g,'');
   if(v.length > 11) v = v.slice(0,11);
-  if(v.length > 7)      v = v.replace(/^(\d{2})(\d{1})(\d{4})(\d{0,4})/,'($1) $2 $3-$4');
-  else if(v.length > 6) v = v.replace(/^(\d{2})(\d{1})(\d{0,4})/,'($1) $2 $3');
-  else if(v.length > 2) v = v.replace(/^(\d{2})(\d{0,1})/,'($1) $2');
-  else if(v.length > 0) v = v.replace(/^(\d{0,2})/,'($1');
-  this.value = v;
+  if(v.length > 7) v = '('+v.slice(0,2)+') '+v.slice(2,7)+'-'+v.slice(7);
+  else if(v.length > 2) v = '('+v.slice(0,2)+') '+v.slice(2);
+  else if(v.length > 0) v = '('+v;
+  e.target.value = v;
 });
 
-/* ═══════════════ OUTRO FIELD ═══════════════ */
-function toggleOutro(val){
-  const show = val === 'Outro';
-  document.getElementById('field-outro').style.display = show ? 'block' : 'none';
-  if(!show) document.getElementById('f-outro').value = '';
-}
+/* ══════ ENVIAR CADASTRO ══════ */
+function enviarCadastro(){
+  const nome = document.getElementById('nome').value.trim();
+  const cidade = document.getElementById('cidade').value.trim();
+  const funcao = document.getElementById('funcao').value;
+  const whatsapp = document.getElementById('whatsapp').value.trim();
 
-/* ═══════════════ FORM VALIDATE ═══════════════ */
-function validate(){
-  const nome   = document.getElementById('f-nome').value.trim();
-  const cidade = document.getElementById('f-cidade').value.trim();
-  const funcao = document.getElementById('f-funcao').value;
-  const outro  = document.getElementById('f-outro').value.trim();
-  const wpp    = document.getElementById('f-wpp').value.replace(/\D/g,'');
-  let ok = true;
-  const set = (id, show, msg) => {
-    const el = document.getElementById(id);
-    if(msg) el.textContent = msg;
-    el.style.display = show ? 'block' : 'none';
-    if(show) ok=false;
-  };
-  const nomeInvalido = !nome;
-  const nomeComNumero = /\d/.test(nome);
-  set('e-nome', nomeInvalido, 'Informe seu nome completo.');
-  if(!nomeInvalido) set('e-nome', nomeComNumero, 'Nome não pode conter números.');
-  set('e-cidade', !cidade, null);
-  set('e-funcao', !funcao, null);
-  set('e-outro',  funcao === 'Outro' && !outro, null);
-  set('e-wpp',    wpp.length < 10, null);
-  return ok;
-}
-
-/* ═══════════════ FORM SUBMIT ═══════════════ */
-async function submitForm(){
-  if(!validate()) return;
-  showLoading('Salvando seu cadastro…');
-  const nome   = document.getElementById('f-nome').value.trim();
-  const cidade = document.getElementById('f-cidade').value.trim();
-  const sel    = document.getElementById('f-funcao').value;
-  const outro  = document.getElementById('f-outro').value.trim();
-  const funcao = sel === 'Outro' ? outro : sel;
-  const wpp    = document.getElementById('f-wpp').value.replace(/\D/g,'');
-
-  try {
-    // Verifica se WhatsApp já cadastrado
-    const { data: existing, error: selErr } = await sb.from('secretarios')
-      .select('id').eq('whatsapp', wpp).eq('evento', EVENTO_ID).maybeSingle();
-
-    if(selErr && selErr.code !== 'PGRST116'){
-      // Se SELECT falhar por RLS, tenta continuar mas loga
-      console.warn('Duplicate check failed:', selErr.message);
-    }
-
-    if(existing){
-      hideLoading();
-      alert('⚠️ Este WhatsApp já está cadastrado neste evento!\n\nSe precisar corrigir seus dados, fale com o organizador.');
-      return;
-    }
-
-    const { error } = await sb.from('secretarios').insert([
-      { nome, cidade, funcao, whatsapp: wpp, evento: EVENTO_ID, referido_por: REF_CODE }
-    ]);
-
-    if(error && error.code !== '23505') throw error;
-
-    currentUser = { nome, cidade, funcao, wpp, refCode: wpp }; // refCode = número WPP (único e sem dados extras)
-    hideLoading();
-    goToAvatar();
-  } catch(e){
-    hideLoading();
-    alert('Erro ao salvar: ' + e.message + '\n\nVerifique a configuração do Supabase no topo do arquivo index.html.');
-  }
-}
-
-/* ═══════════════ SHARE WHATSAPP ═══════════════ */
-function shareWhatsApp(){
-  const url = encodeURIComponent(window.location.href.split('?')[0]);
-  const txt = encodeURIComponent(
-    `🏫 *Rede de Secretários de Educação*\n\nOlá! Faça seu cadastro para receber atas, editais e licitações direto no WhatsApp.\n\n👉 ${decodeURIComponent(url)}`
-  );
-  window.open(`https://wa.me/?text=${txt}`, '_blank');
-}
-
-/* ═══════════════ ROLETA STAGE ═══════════════ */
-async function goToRoleta(){
-  document.getElementById('s-form').style.display = 'none';
-  document.getElementById('s-roleta').style.display = 'block';
-  document.getElementById('stp3').className = 'step active';
-
-  drawWheel(document.getElementById('wheel'), 0);
-
-  // Check if winner already exists
-  showLoading('Verificando sorteio…');
-  try {
-    const { data } = await sb.from('sorteio')
-      .select('*').eq('evento', EVENTO_ID).eq('ativo', true).single();
-
-    hideLoading();
-    if(data && data.winner_nome){
-      document.getElementById('winner-alert-txt').textContent =
-        `🏆 Ganhador(a): ${data.winner_nome} (${data.winner_cidade})`;
-      document.getElementById('winner-alert').style.display = 'block';
-      document.getElementById('spin-btn').disabled = true;
-      document.getElementById('spin-tip').textContent = '🔒 Sorteio encerrado para este evento.';
-    }
-  } catch {
-    hideLoading();
-  }
-}
-
-
-
-/* ═══════════════ DRAW WHEEL ═══════════════ */
-function drawWheel(canvas, rotation){
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width, cx = W/2, cy = W/2, R = cx - 4;
-  const n = SEGS.length;
-  const arc = (Math.PI*2)/n;
-  ctx.clearRect(0,0,W,W);
-
-  SEGS.forEach((seg,i) => {
-    const start = rotation + arc*i - Math.PI/2;
-    const end   = start + arc;
-
-    // Slice
-    ctx.beginPath();
-    ctx.moveTo(cx,cy);
-    ctx.arc(cx,cy,R,start,end);
-    ctx.closePath();
-    ctx.fillStyle = seg.color;
-    ctx.fill();
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 2.5;
-    ctx.stroke();
-
-    // Text inside slice (rotated)
-    ctx.save();
-    ctx.translate(cx,cy);
-    ctx.rotate(start + arc/2);
-    ctx.textAlign = 'right';
-
-    // emoji
-    ctx.font = '16px sans-serif';
-    ctx.fillStyle = '#fff';
-    ctx.fillText(seg.emoji, R-8, 5);
-
-    // two lines of label
-    ctx.font = 'bold 9px Nunito,sans-serif';
-    ctx.fillText(seg.label[0], R-28, -5);
-    ctx.fillText(seg.label[1], R-28,  7);
-    ctx.restore();
-  });
-
-  // Prize ring highlight
-  const prizeIdx = SEGS.findIndex(s=>s.prize);
-  const ps = rotation + arc*prizeIdx - Math.PI/2;
-  ctx.beginPath(); ctx.moveTo(cx,cy);
-  ctx.arc(cx,cy,R,ps,ps+arc); ctx.closePath();
-  ctx.strokeStyle='rgba(255,255,255,0.6)';
-  ctx.lineWidth=4; ctx.stroke();
-
-  // Outer ring
-  ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2);
-  ctx.strokeStyle='rgba(255,255,255,0.9)'; ctx.lineWidth=4; ctx.stroke();
-
-  // Center circle
-  ctx.beginPath(); ctx.arc(cx,cy,28,0,Math.PI*2);
-  ctx.fillStyle='#fff'; ctx.fill();
-  ctx.strokeStyle='rgba(0,0,0,.08)'; ctx.lineWidth=2; ctx.stroke();
-  ctx.font='20px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText('🎡',cx,cy);
-}
-
-/* ═══════════════ SPIN ═══════════════ */
-async function spinWheel(){
-  if(isSpinning || hasSpun){
-    alert('🔒 Você já utilizou sua tentativa neste cadastro!');
+  if(!nome || !cidade || !funcao || !whatsapp){
+    alert('Por favor, preencha todos os campos!');
     return;
   }
-  isSpinning = true;
-  document.getElementById('spin-btn').disabled = true;
-  document.getElementById('result-box').style.display = 'none';
-
-  // Pick target segment
-  const winIdx = Math.floor(Math.random() * SEGS.length);
-  const n = SEGS.length;
-  const arc = (Math.PI*2)/n;
-
-  // Calculate final rotation so that winIdx is centered at top
-  const targetMod = ((-(arc*winIdx + arc/2)) % (Math.PI*2) + Math.PI*2) % (Math.PI*2);
-  const currentMod = (wheelRotation % (Math.PI*2) + Math.PI*2) % (Math.PI*2);
-  const extra = (5 + Math.floor(Math.random()*4)) * Math.PI*2;
-  const delta = (targetMod - currentMod + Math.PI*2) % (Math.PI*2);
-  const finalRotation = wheelRotation + extra + delta;
-
-  const canvas = document.getElementById('wheel');
-  const startRot = wheelRotation;
-  const startTime = performance.now();
-  const duration = 4500 + Math.random()*800;
-
-  function easeOut(t){ return 1 - Math.pow(1-t, 4); }
-
-  function frame(now){
-    const t = Math.min((now-startTime)/duration, 1);
-    wheelRotation = startRot + (finalRotation-startRot)*easeOut(t);
-    drawWheel(canvas, wheelRotation);
-    if(t < 1){ requestAnimationFrame(frame); }
-    else{
-      wheelRotation = finalRotation;
-      isSpinning = false;
-      hasSpun = true;
-      onSpinEnd(winIdx);
-    }
-  }
-  requestAnimationFrame(frame);
-}
-
-async function onSpinEnd(winIdx){
-  const seg = SEGS[winIdx];
-  const box = document.getElementById('result-box');
-
-  if(seg.prize){
-    // Check & claim prize in Supabase
-    showLoading('Verificando prêmio…');
-    try {
-      // Atomic update: only succeeds if winner_nome IS NULL
-      const { data: updated, error } = await sb.from('sorteio')
-        .update({ winner_nome: currentUser.nome, winner_cidade: currentUser.cidade, winner_id: currentUser.id || null })
-        .eq('evento', EVENTO_ID)
-        .eq('ativo', true)
-        .is('winner_nome', null)
-        .select();
-
-      hideLoading();
-
-      if(updated && updated.length > 0){
-        // Winner!
-        wonPrize = true;
-        document.getElementById('res-emoji').textContent  = '💰';
-        document.getElementById('res-title').textContent  = 'VOCÊ GANHOU!';
-        document.getElementById('res-msg').innerHTML =
-          `<strong>${currentUser.nome}</strong>, parabéns!<br>R$100 no Pix! Aguarde o contato da organização.`;
-        box.className = 'result-box win';
-        launchConfetti(200);
-      } else {
-        // Prize already taken — fetch winner name
-        const { data: w } = await sb.from('sorteio').select('winner_nome,winner_cidade').eq('evento',EVENTO_ID).single();
-        const nome = w?.winner_nome || 'outro participante';
-        document.getElementById('res-emoji').textContent = '😔';
-        document.getElementById('res-title').textContent = 'Alguém ganhou na frente!';
-        document.getElementById('res-msg').textContent   = `O prêmio já foi para ${nome}. Participe do próximo evento!`;
-        box.className = 'result-box taken';
-        document.getElementById('winner-alert-txt').textContent = `🏆 Ganhador(a): ${nome}`;
-        document.getElementById('winner-alert').style.display = 'block';
-      }
-    } catch(e){
-      hideLoading();
-      document.getElementById('res-emoji').textContent = '⚠️';
-      document.getElementById('res-title').textContent = 'Erro na verificação';
-      document.getElementById('res-msg').textContent   = 'Tente novamente ou fale com o administrador.';
-      box.className = 'result-box taken';
-    }
-  } else {
-    // Fun message
-    const funs = [
-      ['🎉','Participe mais!','Sua presença fortalece a rede!'],
-      ['📋','Ata entregue!','Continue contribuindo com a educação!'],
-      ['🏆','Destaque do Evento!','Você é referência na sua região!'],
-      ['⭐','Continue assim!','A educação agradece seu compromisso!'],
-      ['📚','Educação em ação!','Juntos transformamos o futuro!'],
-      ['🤝','Rede ativa!','Conectado e colaborando — assim avançamos!'],
-      ['🎓','Missão cumprida!','Você faz a diferença todos os dias!'],
-    ];
-    const f = funs[Math.floor(Math.random()*funs.length)];
-    document.getElementById('res-emoji').textContent = f[0];
-    document.getElementById('res-title').textContent = f[1];
-    document.getElementById('res-msg').textContent   = f[2];
-    box.className = 'result-box fun';
-    launchConfetti(60);
+  if(whatsapp.replace(/\D/g,'').length < 10){
+    alert('WhatsApp inválido! Verifique o número.');
+    return;
   }
 
-  document.getElementById('spin-btn').disabled = true;
-  document.getElementById('spin-tip').textContent = '🔒 Você já utilizou sua tentativa!';
-  box.style.display = 'block';
-  document.getElementById('result-btns').style.display = 'flex';
+  const btn = document.getElementById('btnSubmit');
+  btn.disabled = true;
+  btn.textContent = 'Cadastrando...';
 
-  // Prepara link de referência
-  prepararRefLink();
+  /* Salvar dados (localStorage como fallback simples) */
+  const dados = {nome, cidade, funcao, whatsapp, data: new Date().toISOString()};
+  const lista = JSON.parse(localStorage.getItem('cadastros') || '[]');
+  lista.push(dados);
+  localStorage.setItem('cadastros', JSON.stringify(lista));
 
-  // Após 2.5s mostra popup casino
-  setTimeout(abrirCasino, 2500);
+  setTimeout(()=>{
+    goToRoleta();
+  }, 800);
 }
 
-function prepararRefLink(){
-  const base = window.location.href.split('?')[0];
-  const refCode = currentUser.wpp;
-  const refUrl = `${base}?ref=${refCode}`;
-  currentUser.refUrl = refUrl;
-  document.getElementById('ref-link-display').textContent = refUrl;
+/* ══════ NAVEGAÇÃO ══════ */
+function goToRoleta(){
+  document.getElementById('cardDados').style.display = 'none';
+  document.getElementById('cardRoleta').style.display = 'block';
+  document.getElementById('stepDados').className = 'step-tab inactive';
+  document.getElementById('stepRoleta').className = 'step-tab active';
+  document.getElementById('stepRoleta').disabled = false;
+  drawWheel();
 }
 
-function abrirCasino(){
-  document.getElementById('casino-overlay').classList.add('show');
+function showDados(){
+  document.getElementById('cardDados').style.display = 'block';
+  document.getElementById('cardRoleta').style.display = 'none';
+  document.getElementById('stepDados').className = 'step-tab active';
+  document.getElementById('stepRoleta').className = 'step-tab inactive';
 }
 
-function fecharCasino(){
-  document.getElementById('casino-overlay').classList.remove('show');
-}
+/* ══════ ROLETA CANVAS ══════ */
+const premios = [
+  {label:'R$100', cor:'#E74C3C', chance:2},
+  {label:'R$50',  cor:'#F39C12', chance:5},
+  {label:'R$20',  cor:'#27AE60', chance:10},
+  {label:'R$10',  cor:'#3498DB', chance:15},
+  {label:'R$5',   cor:'#9B59B6', chance:25},
+  {label:'Tente\noutra vez', cor:'#95A5A6', chance:43},
+];
 
-function fecharCasinoEMostrarRef(){
-  document.getElementById('casino-overlay').classList.remove('show');
-  document.getElementById('ref-block').style.display = 'block';
-  document.getElementById('ref-block').scrollIntoView({behavior:'smooth',block:'center'});
-}
+let currentAngle = 0;
+let spinning = false;
 
-function copiarRefLink(){
-  navigator.clipboard.writeText(currentUser.refUrl || '').then(() => {
-    alert('✅ Link copiado!');
-  }).catch(() => {
-    // fallback
-    const el = document.createElement('textarea');
-    el.value = currentUser.refUrl || '';
-    document.body.appendChild(el); el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
-    alert('✅ Link copiado!');
-  });
-}
-
-function shareRefWhatsApp(){
-  const url = encodeURIComponent(currentUser.refUrl || '');
-  const txt = encodeURIComponent(
-    `🏫 *Rede de Secretários de Educação*\n\nOlá! Faça seu cadastro para receber atas, editais e licitações direto no WhatsApp — e concorra a R$100 no Pix!\n\n👉 Acesse pelo meu link: ${decodeURIComponent(url)}`
-  );
-  window.open(`https://wa.me/?text=${txt}`, '_blank');
-}
-
-function shareResultWhatsApp(){
-  const title = document.getElementById('res-title').textContent;
-  const msg   = document.getElementById('res-msg').textContent;
-  const url   = window.location.href.split('?')[0];
-  const txt   = encodeURIComponent(
-    `🎡 *Girei a Roleta da Rede de Secretários de Educação!*\n\n${title}\n${msg}\n\n👉 Participe também: ${url}`
-  );
-  window.open(`https://wa.me/?text=${txt}`, '_blank');
-}
-
-
-
-/* ═══════════════ CONFETTI ═══════════════ */
-function launchConfetti(count=120){
-  const canvas = document.getElementById('confetti-canvas');
-  canvas.width  = window.innerWidth;
-  canvas.height = window.innerHeight;
+function drawWheel(angle){
+  const canvas = document.getElementById('wheelCanvas');
   const ctx = canvas.getContext('2d');
-  const colors = ['#FFD93D','#00C37A','#FF6B35','#4A90D9','#FF4FA3','#7C3AED','#10B981'];
-  const parts = Array.from({length:count},()=>({
-    x: Math.random()*canvas.width,
-    y: Math.random()*-canvas.height*0.5,
-    vx: (Math.random()-.5)*5,
-    vy: Math.random()*3+2,
-    color: colors[Math.floor(Math.random()*colors.length)],
-    w: Math.random()*10+5,
-    h: Math.random()*5+3,
-    r: Math.random()*Math.PI*2,
-    vr: (Math.random()-.5)*.2,
-  }));
-  let frame=0;
-  const total=180;
-  function anim(){
-    if(frame>total){ctx.clearRect(0,0,canvas.width,canvas.height);return}
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    parts.forEach(p=>{
-      p.x+=p.vx; p.y+=p.vy; p.r+=p.vr; p.vy+=.08;
-      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r);
-      ctx.globalAlpha=Math.max(0,1-frame/total);
-      ctx.fillStyle=p.color;
-      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
-      ctx.restore();
+  const cx = 140, cy = 140, r = 130;
+  const total = premios.length;
+  const arc = (Math.PI * 2) / total;
+
+  ctx.clearRect(0, 0, 280, 280);
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angle || 0);
+  ctx.translate(-cx, -cy);
+
+  for(let i = 0; i < total; i++){
+    const startAngle = i * arc;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, startAngle, startAngle + arc);
+    ctx.fillStyle = premios[i].cor;
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    /* Texto */
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(startAngle + arc / 2);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 14px Nunito, sans-serif';
+    const lines = premios[i].label.split('\n');
+    lines.forEach((line, li) => {
+      ctx.fillText(line, r * 0.65, 5 + (li - (lines.length-1)/2) * 16);
     });
-    frame++; requestAnimationFrame(anim);
+    ctx.restore();
   }
-  anim();
+  ctx.restore();
+
+  /* Centro */
+  ctx.beginPath();
+  ctx.arc(cx, cy, 18, 0, Math.PI * 2);
+  ctx.fillStyle = '#1A3F7A';
+  ctx.fill();
+  ctx.strokeStyle = '#FFD54F';
+  ctx.lineWidth = 3;
+  ctx.stroke();
 }
 
-/* ═══════════════ LOADING ═══════════════ */
-function showLoading(txt='Carregando…'){
-  document.getElementById('loading-txt').textContent=txt;
-  document.getElementById('loading').classList.add('show');
-}
-function hideLoading(){ document.getElementById('loading').classList.remove('show'); }
+function spinWheel(){
+  if(spinning) return;
+  spinning = true;
+  document.getElementById('btnSpin').disabled = true;
 
-/* ═══════════════ INIT WHEEL ═══════════════ */
-window.addEventListener('load',()=> drawWheel(document.getElementById('wheel'),0));
+  /* Escolher prêmio por chance ponderada */
+  const rand = Math.random() * 100;
+  let acc = 0, chosen = premios.length - 1;
+  for(let i = 0; i < premios.length; i++){
+    acc += premios[i].chance;
+    if(rand <= acc){ chosen = i; break; }
+  }
+
+  const total = premios.length;
+  const arc = (Math.PI * 2) / total;
+  /* Ângulo final: o prêmio chosen deve ficar no topo (posição do ponteiro = -PI/2) */
+  const targetAngle = -chosen * arc - arc / 2 - Math.PI / 2;
+  const fullSpins = 5 * Math.PI * 2;
+  const finalAngle = fullSpins + targetAngle - currentAngle;
+
+  const duration = 4000;
+  const start = performance.now();
+  const startAngle = currentAngle;
+
+  function animate(now){
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    /* Easing: ease-out cubic */
+    const eased = 1 - Math.pow(1 - progress, 3);
+    currentAngle = startAngle + finalAngle * eased;
+    drawWheel(currentAngle);
+
+    if(progress < 1){
+      requestAnimationFrame(animate);
+    } else {
+      spinning = false;
+      showResult(chosen);
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
+function showResult(idx){
+  const premio = premios[idx];
+  const overlay = document.getElementById('resultOverlay');
+  const isWin = !premio.label.includes('Tente');
+
+  document.getElementById('resultEmoji').textContent = isWin ? '🎉' : '😅';
+  document.getElementById('resultTitle').textContent = isWin ? 'Parabéns!' : 'Quase lá!';
+  document.getElementById('resultPrize').textContent = isWin ? premio.label : '';
+  document.getElementById('resultPrize').style.display = isWin ? 'block' : 'none';
+  document.getElementById('resultMsg').textContent = isWin
+    ? 'Você ganhou! Entraremos em contato pelo WhatsApp para enviar seu Pix.'
+    : 'Não foi dessa vez, mas você já está cadastrado na rede! Indique amigos para ganhar mais chances.';
+
+  overlay.classList.add('show');
+
+  if(isWin) launchConfetti();
+}
+
+function fecharResultado(){
+  document.getElementById('resultOverlay').classList.remove('show');
+  document.getElementById('btnSpin').disabled = false;
+}
+
+/* ══════ CONFETTI ══════ */
+function launchConfetti(){
+  const colors = ['#E74C3C','#F39C12','#27AE60','#3498DB','#9B59B6','#FFD54F'];
+  for(let i = 0; i < 60; i++){
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + 'vw';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 1.5 + 's';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    piece.style.width = (6 + Math.random() * 8) + 'px';
+    piece.style.height = (6 + Math.random() * 8) + 'px';
+    document.body.appendChild(piece);
+    setTimeout(()=> piece.remove(), 4500);
+  }
+}
+
+/* ══════ CASINO ══════ */
+function abrirCasino(){
+  const emojis = ['🍒','🍋','⭐','💎','7️⃣','🔔'];
+  document.getElementById('slot1').textContent = emojis[Math.floor(Math.random()*emojis.length)];
+  document.getElementById('slot2').textContent = emojis[Math.floor(Math.random()*emojis.length)];
+  document.getElementById('slot3').textContent = emojis[Math.floor(Math.random()*emojis.length)];
+  document.getElementById('casinoOverlay').classList.add('show');
+}
+function fecharCasino(){
+  document.getElementById('casinoOverlay').classList.remove('show');
+}
+
+/* ══════ COMPARTILHAR ══════ */
+function compartilhar(){
+  const url = window.location.href;
+  const msg = encodeURIComponent('📚 Entre na Rede de Secretários de Educação e concorra a R$100 no Pix!\n\n👉 ' + url);
+  window.open('https://wa.me/?text=' + msg, '_blank');
+}
+
+/* ══════ INIT ══════ */
+drawWheel(0);
 </script>
 </body>
 </html>
