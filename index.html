@@ -103,126 +103,6 @@ body{font-family:'Nunito',sans-serif;background:#EBF3FF;min-height:100vh;overflo
 }
 .av-city{font-size:13px;color:#aaa;margin-bottom:16px}
 
-/* ── FOTO UPLOAD ── */
-.foto-area{
-  border:2.5px dashed var(--borda);border-radius:18px;padding:20px 16px;
-  margin-bottom:16px;background:var(--cinza);text-align:center;transition:border .2s;cursor:pointer
-}
-.foto-area:hover{border-color:var(--verde)}
-.foto-area .ico{font-size:36px;margin-bottom:6px}
-.foto-area p{font-size:13px;color:#888;font-weight:700;margin:0}
-.foto-area small{font-size:11px;color:#bbb}
-.btn-foto{
-  width:100%;padding:13px;border:none;border-radius:12px;
-  font-family:'Fredoka One',cursive;font-size:16px;cursor:pointer;
-  background:linear-gradient(135deg,var(--roxo),#5B21B6);color:#fff;
-  box-shadow:0 4px 14px rgba(124,58,237,.25);transition:transform .15s;margin-bottom:12px
-}
-.btn-foto:active{transform:scale(.97)}
-.foto-status{font-size:13px;color:var(--verde);font-weight:700;margin-bottom:8px;display:none}
-.foto-preview{
-  width:120px;height:120px;border-radius:50%;object-fit:cover;
-  border:3px solid var(--borda);margin:0 auto 10px;display:none;
-}
-.ghibli-loading{
-  text-align:center;padding:16px;font-size:13px;color:var(--roxo);
-  font-weight:700;display:none;
-}
-.ghibli-loading span{display:block;font-size:28px;animation:float 1.2s ease-in-out infinite}
-
-/* ── BADGE ── */
-.badge{
-  display:flex;align-items:center;gap:12px;
-  background:linear-gradient(135deg,var(--amarelo),#FFB347);
-  border-radius:14px;padding:14px 16px;margin-bottom:16px;text-align:left
-}
-.badge-ico{font-size:30px}
-.badge-txt strong{display:block;font-size:14px;color:var(--azul);font-weight:800}
-.badge-txt span{font-size:12px;color:var(--azul);opacity:.75}
-
-/* ── QR ── */
-.qr-section{
-  border:2px dashed var(--borda);border-radius:16px;padding:14px;
-  margin-bottom:16px;display:flex;flex-direction:column;align-items:center;gap:6px
-}
-.qr-section p{font-size:12px;color:#aaa;font-weight:700;letter-spacing:.3px}
-#qrcode canvas,#qrcode img{border-radius:8px}
-
-/* ── SHARE ── */
-.share-row{display:flex;gap:10px;margin-bottom:0}
-.btn-wpp{
-  flex:1;padding:13px;border:none;border-radius:12px;background:#25D366;color:#fff;
-  font-family:'Fredoka One',cursive;font-size:15px;cursor:pointer;transition:transform .15s;
-  box-shadow:0 4px 14px rgba(37,211,102,.3)
-}
-.btn-wpp:active{transform:scale(.96)}
-.btn-spin{
-  flex:1;padding:13px;border:none;border-radius:12px;
-  background:linear-gradient(135deg,var(--roxo),#5B21B6);color:#fff;
-  font-family:'Fredoka One',cursive;font-size:15px;cursor:pointer;transition:transform .15s;
-  box-shadow:0 4px 14px rgba(124,58,237,.3)
-}
-.btn-spin:active{transform:scale(.96)}
-
-/* ── WHEEL STAGE ── */
-#s-roleta{display:none}
-#s-roleta .card{text-align:center}
-.wheel-wrap{position:relative;display:inline-block;margin-bottom:6px}
-#wheel{border-radius:50%;box-shadow:0 8px 36px rgba(26,58,107,.15);display:block}
-.ptr{
-  position:absolute;top:-16px;left:50%;transform:translateX(-50%);
-  font-size:30px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))
-}
-.spin-tip{font-size:13px;color:#aaa;margin-bottom:16px;font-weight:600}
-
-.spin-btn{
-  width:100%;padding:15px;border:none;border-radius:14px;
-  font-family:'Fredoka One',cursive;font-size:18px;cursor:pointer;
-  background:linear-gradient(135deg,var(--laranja),#D84315);color:#fff;
-  box-shadow:0 5px 22px rgba(255,107,53,.3);transition:transform .15s,box-shadow .15s
-}
-.spin-btn:hover{box-shadow:0 7px 30px rgba(255,107,53,.45)}
-.spin-btn:active{transform:scale(.97)}
-.spin-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
-
-/* winner-already banner */
-.winner-alert{
-  background:linear-gradient(135deg,#FFF3CD,#FFE082);
-  border-radius:14px;padding:14px 16px;margin-bottom:16px;display:none;text-align:left;
-  border:2px solid var(--amarelo)
-}
-.winner-alert strong{display:block;color:var(--azul);font-size:14px;font-weight:800;margin-bottom:2px}
-.winner-alert span{font-size:13px;color:var(--azul);opacity:.8}
-
-.result-box{
-  border-radius:16px;padding:20px;margin-top:16px;display:none;
-  animation:pop .4s cubic-bezier(.175,.885,.32,1.275)
-}
-.result-box.win{background:linear-gradient(135deg,var(--azul),#1D4ED8);color:#fff}
-.result-box.fun{background:linear-gradient(135deg,var(--amarelo),#FFCA28);color:var(--azul)}
-.result-box.taken{background:linear-gradient(135deg,#E8EAED,#D5DAE0);color:#444}
-.result-big{font-size:40px;margin-bottom:4px}
-.result-title{font-family:'Fredoka One',cursive;font-size:20px;margin-bottom:6px}
-.result-msg{font-size:13px;opacity:.85;line-height:1.5}
-
-/* ── LOADING ── */
-.loading{
-  position:fixed;inset:0;background:rgba(255,255,255,.88);z-index:500;
-  display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px
-}
-.loading.show{display:flex}
-.spinner{
-  width:44px;height:44px;border:4px solid var(--borda);
-  border-top-color:var(--verde);border-radius:50%;animation:spin 1s linear infinite
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loading p{font-weight:700;color:var(--azul);font-size:14px}
-
-/* ── FOOTER ── */
-footer{text-align:center;padding:20px 16px 30px;font-size:12px;color:#bbb}
-footer a{color:var(--azul);opacity:.4;text-decoration:none}
-footer a:hover{opacity:.7}
-[hidden]{display:none!important}
 /* ── CASINO POPUP ── */
 .casino-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:900;
@@ -300,8 +180,7 @@ footer a:hover{opacity:.7}
 <!-- ── STEPS ── -->
 <div class="steps">
   <div class="step active" id="stp1"><div class="step-n">1</div> Dados</div>
-  <div class="step" id="stp2"><div class="step-n">2</div> Avatar</div>
-  <div class="step" id="stp3"><div class="step-n">3</div> Roleta</div>
+  <div class="step" id="stp3"><div class="step-n">2</div> Roleta</div>
 </div>
 
 <!-- ══ STAGE 1: FORM ══ -->
@@ -355,64 +234,7 @@ footer a:hover{opacity:.7}
   </div>
 </section>
 
-<!-- ══ STAGE 2: AVATAR ══ -->
-<section id="s-avatar">
-  <div class="card">
 
-    <!-- Foto upload (antes de ter o avatar) -->
-    <div id="foto-upload-area">
-      <h2 style="font-family:'Fredoka One',cursive;color:var(--azul);font-size:20px;margin-bottom:4px">🎨 Seu Avatar Ghibli</h2>
-      <p class="sub" style="margin-bottom:16px">Tire uma selfie ou envie uma foto para ganhar seu avatar no estilo Studio Ghibli!</p>
-
-      <img id="foto-preview" class="foto-preview" alt="Sua foto">
-      <div class="ghibli-loading" id="ghibli-loading">
-        <span>✨</span>
-        Transformando em Ghibli…<br>
-        <small style="color:#aaa;font-weight:400">Pode levar até 15 segundos</small>
-      </div>
-
-      <div class="foto-area" onclick="document.getElementById('foto-input').click()">
-        <div class="ico">📸</div>
-        <p>Toque para tirar foto ou escolher da galeria</p>
-        <small>JPG ou PNG • máx. 5MB</small>
-      </div>
-      <input type="file" id="foto-input" accept="image/*" capture="user" style="display:none" onchange="handleFoto(this)">
-
-      <div class="foto-status" id="foto-status">✅ Foto carregada! Clique em Gerar →</div>
-      <button class="btn-foto" id="btn-gerar" onclick="gerarGhibli()" style="display:none">✨ Gerar Avatar Ghibli!</button>
-      <button class="btn btn-outline" style="margin-bottom:0" onclick="pularFoto()">Pular → continuar sem foto</button>
-    </div>
-
-    <!-- Avatar resultado -->
-    <div id="avatar-resultado" style="display:none">
-      <div class="av-wrap" id="av-wrap">
-        <span class="av-loading">🎨</span>
-      </div>
-      <div class="av-name" id="av-nome">—</div>
-      <div class="av-role" id="av-funcao">—</div>
-      <div class="av-city" id="av-city">📍 —</div>
-
-      <div class="badge">
-        <div class="badge-ico">✅</div>
-        <div class="badge-txt">
-          <strong>Cadastro confirmado!</strong>
-          <span>Você receberá atas e licitações direto no WhatsApp.</span>
-        </div>
-      </div>
-
-    <div class="qr-section">
-      <p>📲 COMPARTILHE ESTE QR CODE</p>
-      <div id="qrcode"></div>
-      <p style="font-size:11px;color:#ccc">Aponte a câmera para convidar colegas</p>
-    </div>
-
-    <div class="share-row">
-      <button class="btn-wpp" onclick="shareWhatsApp()">📤 Compartilhar</button>
-      <button class="btn-spin" onclick="goToRoleta()">🎡 Girar Roleta!</button>
-    </div>
-    </div><!-- /avatar-resultado -->
-  </div>
-</section>
 
 <!-- ══ STAGE 3: ROLETA ══ -->
 <section id="s-roleta">
@@ -450,7 +272,6 @@ footer a:hover{opacity:.7}
       </div>
     </div>
 
-    <button class="btn btn-outline" style="margin-top:16px" onclick="goBack()">← Voltar ao perfil</button>
   </div>
 </section>
 
@@ -599,188 +420,6 @@ async function submitForm(){
   }
 }
 
-/* ═══════════════ FOTO UPLOAD ═══════════════ */
-let fotoBase64 = null;
-
-function handleFoto(input){
-  const file = input.files[0];
-  if(!file) return;
-  if(file.size > 5 * 1024 * 1024){
-    alert('Foto muito grande! Use uma imagem menor que 5MB.'); return;
-  }
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    fotoBase64 = e.target.result; // data:image/...;base64,...
-    const preview = document.getElementById('foto-preview');
-    preview.src = fotoBase64;
-    preview.style.display = 'block';
-    document.getElementById('foto-status').style.display = 'block';
-    document.getElementById('btn-gerar').style.display = 'block';
-    // Update foto-area text
-    document.querySelector('.foto-area p').textContent = 'Foto selecionada! Clique em Gerar ou troque a foto.';
-  };
-  reader.readAsDataURL(file);
-}
-
-async function gerarGhibli(){
-  if(!fotoBase64) return;
-  document.getElementById('btn-gerar').style.display = 'none';
-  document.getElementById('foto-status').style.display = 'none';
-  document.getElementById('ghibli-loading').style.display = 'block';
-
-  const funcao = currentUser.funcao || 'educator';
-  const seed = Math.floor(Math.random() * 99999);
-
-  try {
-    // Redimensiona foto para max 512px (Pollinations aceita melhor)
-    const resized = await resizeImage(fotoBase64, 512);
-    const base64Data = resized.split(',')[1];
-
-    // Pollinations img2img via modelo turbo
-    const prompt = encodeURIComponent(
-      'Studio Ghibli anime style, Hayao Miyazaki watercolor portrait, soft pastel colors, warm expressive eyes, gentle smile, hand-drawn anime illustration style'
-    );
-
-    const resp = await fetch('https://image.pollinations.ai/prompt/' + prompt, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        model: 'turbo',
-        image: base64Data,
-        strength: 0.7,
-        nologo: true,
-        seed: seed,
-        width: 512,
-        height: 512
-      })
-    });
-
-    if(!resp.ok) throw new Error('status ' + resp.status);
-    const blob = await resp.blob();
-    if(blob.size < 5000) throw new Error('imagem muito pequena');
-    mostrarAvatarGhibli(URL.createObjectURL(blob));
-
-  } catch(err) {
-    console.warn('img2img falhou, tentando text2img:', err);
-    // Fallback: descreve a pessoa pelo nome e usa text-to-image
-    const firstName = (currentUser.nome || 'person').split(' ')[0];
-    const prompt2 = encodeURIComponent(
-      `Studio Ghibli anime portrait of ${firstName}, Brazilian ${funcao}, Hayao Miyazaki style, soft watercolor, warm expression, high quality`
-    );
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload  = () => mostrarAvatarGhibli(img.src);
-    img.onerror = () => {
-      document.getElementById('ghibli-loading').style.display = 'none';
-      alert('Não foi possível gerar o avatar agora. Tente novamente ou clique em Pular.');
-      document.getElementById('btn-gerar').style.display = 'block';
-    };
-    img.src = `https://image.pollinations.ai/prompt/${prompt2}?nologo=true&seed=${seed}&width=512&height=512&model=flux`;
-  }
-}
-
-// Redimensiona imagem para max maxSize px mantendo proporção
-function resizeImage(dataUrl, maxSize){
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => {
-      const ratio = Math.min(maxSize/img.width, maxSize/img.height, 1);
-      const w = Math.round(img.width * ratio);
-      const h = Math.round(img.height * ratio);
-      const canvas = document.createElement('canvas');
-      canvas.width = w; canvas.height = h;
-      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      resolve(canvas.toDataURL('image/jpeg', 0.85));
-    };
-    img.src = dataUrl;
-  });
-}
-
-function pularFoto(){
-  // Sem foto: desenha avatar canvas Ghibli
-  fotoBase64 = null;
-  document.getElementById('foto-upload-area').style.display = 'none';
-  document.getElementById('ghibli-loading').style.display = 'none';
-  mostrarAvatarCanvas();
-}
-
-function mostrarAvatarGhibli(url){
-  document.getElementById('ghibli-loading').style.display = 'none';
-  document.getElementById('foto-upload-area').style.display = 'none';
-  document.getElementById('avatar-resultado').style.display = 'block';
-  const wrap = document.getElementById('av-wrap');
-  wrap.innerHTML = '';
-  const img = document.createElement('img');
-  img.src = url; img.id = 'avatar';
-  img.style.cssText = 'width:160px;height:160px;object-fit:cover;border-radius:50%;display:block';
-  wrap.appendChild(img);
-  launchConfetti();
-}
-
-function mostrarAvatarCanvas(){
-  document.getElementById('avatar-resultado').style.display = 'block';
-  const wrap = document.getElementById('av-wrap');
-  wrap.innerHTML = '<canvas id="avatar" width="200" height="200"></canvas>';
-  gerarAvatarGhibli(currentUser.nome, currentUser.funcao);
-  launchConfetti();
-}
-
-/* ═══════════════ AVATAR STAGE ═══════════════ */
-function goToAvatar(){
-  document.getElementById('s-form').style.display = 'none';
-  document.getElementById('s-avatar').style.display = 'block';
-
-  document.getElementById('av-nome').textContent  = currentUser.nome;
-  document.getElementById('av-funcao').textContent = currentUser.funcao;
-  document.getElementById('av-city').textContent   = '📍 ' + currentUser.cidade;
-
-  document.getElementById('stp1').className = 'step done';
-  document.getElementById('stp2').className = 'step active';
-
-  // QR Code
-  document.getElementById('qrcode').innerHTML = '';
-  new QRCode(document.getElementById('qrcode'), {
-    text: window.location.href.split('?')[0],
-    width: 100, height: 100,
-    colorDark:'#1a3a6b', colorLight:'#ffffff',
-    correctLevel: QRCode.CorrectLevel.M
-  });
-}
-
-/* ═══════════════ GHIBLI AVATAR CANVAS FALLBACK ═══════════════ */
-function gerarAvatarGhibli(nome, funcao){
-  const wrap = document.getElementById('av-wrap');
-  wrap.innerHTML = '<span class="av-loading">🎨</span>';
-
-  const funcaoMap = {
-    'Secretário(a) de Educação':    'school principal, blue outfit',
-    'Secretário(a) Adjunto(a)':     'government official, teal outfit',
-    'Diretor(a) de Educação':       'school director, purple outfit',
-    'Coordenador(a) Pedagógico(a)': 'teacher coordinator, yellow outfit',
-    'Técnico(a) de Educação':       'education technician, green outfit',
-  };
-  const role = funcaoMap[funcao] || 'educator, colorful outfit';
-  const prompt = encodeURIComponent(
-    `Studio Ghibli anime style portrait of a Brazilian ${role}, friendly smile, warm eyes, soft watercolor background, Hayao Miyazaki art style, high quality illustration, character portrait, close up face`
-  );
-
-  const img = new Image();
-  img.style.cssText = 'width:160px;height:160px;object-fit:cover;border-radius:50%';
-  img.onload = () => {
-    wrap.innerHTML = '';
-    wrap.appendChild(img);
-  };
-  img.onerror = () => {
-    // fallback: tenta de novo com prompt mais simples
-    const img2 = new Image();
-    img2.style.cssText = img.style.cssText;
-    img2.src = `https://image.pollinations.ai/prompt/${encodeURIComponent('Studio Ghibli anime character portrait, Brazilian educator, friendly, watercolor, Miyazaki style')}&width=300&height=300&nologo=true&seed=${Math.floor(Math.random()*9999)}`;
-    img2.onload = () => { wrap.innerHTML = ''; wrap.appendChild(img2); };
-    img2.onerror = () => { wrap.innerHTML = '<span style="font-size:64px">🧑‍🏫</span>'; };
-  };
-  img.src = `https://image.pollinations.ai/prompt/${prompt}&width=300&height=300&nologo=true&seed=${Math.floor(Math.random()*9999)}`;
-}
-
 /* ═══════════════ SHARE WHATSAPP ═══════════════ */
 function shareWhatsApp(){
   const url = encodeURIComponent(window.location.href.split('?')[0]);
@@ -794,7 +433,6 @@ function shareWhatsApp(){
 async function goToRoleta(){
   document.getElementById('s-avatar').style.display = 'none';
   document.getElementById('s-roleta').style.display = 'block';
-  document.getElementById('stp2').className = 'step done';
   document.getElementById('stp3').className = 'step active';
 
   drawWheel(document.getElementById('wheel'), 0);
@@ -818,12 +456,7 @@ async function goToRoleta(){
   }
 }
 
-function goBack(){
-  document.getElementById('s-roleta').style.display = 'none';
-  document.getElementById('s-avatar').style.display = 'block';
-  document.getElementById('stp3').className = 'step';
-  document.getElementById('stp2').className = 'step active';
-}
+
 
 /* ═══════════════ DRAW WHEEL ═══════════════ */
 function drawWheel(canvas, rotation){
