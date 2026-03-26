@@ -85,13 +85,16 @@ body{font-family:'Nunito',sans-serif;background:#EBF3FF;min-height:100vh;overflo
 /* ── AVATAR STAGE ── */
 #s-avatar{display:none}
 #s-avatar .card{text-align:center}
+/* ── AVATAR GHIBLI ── */
 .av-wrap{
   width:160px;height:160px;border-radius:50%;
   border:5px solid var(--amarelo);box-shadow:0 8px 28px rgba(0,0,0,.12);
   margin:0 auto 14px;overflow:hidden;
-  animation:pop .5s cubic-bezier(.175,.885,.32,1.275)
+  animation:pop .5s cubic-bezier(.175,.885,.32,1.275);
+  background:var(--cinza);display:flex;align-items:center;justify-content:center;
 }
-#avatar{width:160px;height:160px;display:block}
+#avatar{width:160px;height:160px;display:block;object-fit:cover}
+.av-loading{font-size:32px;animation:float 1.5s ease-in-out infinite}
 @keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
 .av-name{font-family:'Fredoka One',cursive;font-size:21px;color:var(--azul);margin-bottom:3px}
 .av-role{
@@ -268,7 +271,9 @@ footer a:hover{opacity:.7}
 <!-- ══ STAGE 2: AVATAR ══ -->
 <section id="s-avatar">
   <div class="card">
-    <div class="av-wrap"><canvas id="avatar" width="200" height="200"></canvas></div>
+    <div class="av-wrap" id="av-wrap">
+      <span class="av-loading">🎨</span>
+    </div>
     <div class="av-name" id="av-nome">—</div>
     <div class="av-role" id="av-funcao">—</div>
     <div class="av-city" id="av-city">📍 —</div>
@@ -317,6 +322,10 @@ footer a:hover{opacity:.7}
       <div class="result-big" id="res-emoji">🎉</div>
       <div class="result-title" id="res-title">Parabéns!</div>
       <div class="result-msg" id="res-msg">Você ganhou!</div>
+      <div class="result-btns" id="result-btns" style="display:none;margin-top:14px;gap:8px;flex-direction:column">
+        <button class="btn-wpp" onclick="shareResultWhatsApp()" style="width:100%;padding:12px;border:none;border-radius:12px;background:#25D366;color:#fff;font-family:'Fredoka One',cursive;font-size:15px;cursor:pointer">📤 Compartilhar resultado</button>
+        <button class="btn-outline" onclick="tentarNovamente()" style="width:100%;padding:11px;border-radius:12px;background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.3);font-family:'Fredoka One',cursive;font-size:15px;cursor:pointer">🔄 Tentar novamente</button>
+      </div>
     </div>
 
     <button class="btn btn-outline" style="margin-top:16px" onclick="goBack()">← Voltar ao perfil</button>
@@ -435,8 +444,8 @@ function goToAvatar(){
   document.getElementById('stp1').className = 'step done';
   document.getElementById('stp2').className = 'step active';
 
-  // Draw Ghibli avatar
-  drawGhibliAvatar(document.getElementById('avatar'), currentUser.nome, currentUser.funcao);
+  // Ghibli avatar via Pollinations.ai
+  gerarAvatarGhibli(currentUser.nome, currentUser.funcao);
 
   // QR Code
   document.getElementById('qrcode').innerHTML = '';
@@ -450,120 +459,38 @@ function goToAvatar(){
   launchConfetti();
 }
 
-/* ═══════════════ DRAW GHIBLI AVATAR ═══════════════ */
-function drawGhibliAvatar(canvas, nome, funcao){
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
+/* ═══════════════ GHIBLI AVATAR via Pollinations.ai (grátis, sem chave) ═══════════════ */
+function gerarAvatarGhibli(nome, funcao){
+  const wrap = document.getElementById('av-wrap');
+  wrap.innerHTML = '<span class="av-loading">🎨</span>';
 
-  const PALETTES = {
-    'Secretário(a) de Educação':    { hair:'#3B82F6', bg1:'#EFF6FF', bg2:'#BFDBFE', skin:'#FFE4C4' },
-    'Secretário(a) Adjunto(a)':     { hair:'#0D9488', bg1:'#F0FDFA', bg2:'#99F6E4', skin:'#FDDBB8' },
-    'Diretor(a) de Educação':       { hair:'#7C3AED', bg1:'#F5F3FF', bg2:'#DDD6FE', skin:'#FFE4C4' },
-    'Coordenador(a) Pedagógico(a)': { hair:'#D97706', bg1:'#FFFBEB', bg2:'#FDE68A', skin:'#FDDBB8' },
-    'Técnico(a) de Educação':       { hair:'#059669', bg1:'#ECFDF5', bg2:'#A7F3D0', skin:'#FFE4C4' },
-    'Outro':                        { hair:'#DB2777', bg1:'#FDF2F8', bg2:'#FBCFE8', skin:'#FDDBB8' },
+  const funcaoMap = {
+    'Secretário(a) de Educação':    'school principal, blue outfit',
+    'Secretário(a) Adjunto(a)':     'government official, teal outfit',
+    'Diretor(a) de Educação':       'school director, purple outfit',
+    'Coordenador(a) Pedagógico(a)': 'teacher coordinator, yellow outfit',
+    'Técnico(a) de Educação':       'education technician, green outfit',
   };
-  const p = PALETTES[funcao] || PALETTES['Outro'];
+  const role = funcaoMap[funcao] || 'educator, colorful outfit';
+  const prompt = encodeURIComponent(
+    `Studio Ghibli anime style portrait of a Brazilian ${role}, friendly smile, warm eyes, soft watercolor background, Hayao Miyazaki art style, high quality illustration, character portrait, close up face`
+  );
 
-  // Background gradient
-  const g = ctx.createLinearGradient(0,0,0,H);
-  g.addColorStop(0, p.bg1); g.addColorStop(1, p.bg2);
-  ctx.fillStyle = g;
-  ctx.beginPath(); ctx.roundRect(0,0,W,H,0); ctx.fill();
-
-  // Sparkles in bg
-  ctx.fillStyle = 'rgba(255,255,255,0.7)';
-  [[30,28],[165,22],[20,155],[170,160],[10,80],[185,95],[100,15]].forEach(([x,y])=>{
-    ctx.beginPath(); ctx.arc(x,y,2.5,0,Math.PI*2); ctx.fill();
-  });
-  // Small cross sparkle
-  const starDraw = (cx,cy,r,c) => {
-    ctx.fillStyle=c;
-    for(let a=0;a<4;a++){
-      ctx.beginPath();
-      ctx.moveTo(cx,cy);
-      ctx.ellipse(cx+Math.cos(a*Math.PI/2)*r,cy+Math.sin(a*Math.PI/2)*r,r*.3,r*.3,0,0,Math.PI*2);
-      ctx.fill();
-    }
+  const img = new Image();
+  img.style.cssText = 'width:160px;height:160px;object-fit:cover;border-radius:50%';
+  img.onload = () => {
+    wrap.innerHTML = '';
+    wrap.appendChild(img);
   };
-  starDraw(168,28,6,p.hair+'99');
-  starDraw(22,170,5,p.hair+'88');
-
-  // Hair (back)
-  ctx.fillStyle = p.hair;
-  ctx.beginPath(); ctx.ellipse(100,95,56,64,0,0,Math.PI*2); ctx.fill();
-
-  // Face
-  ctx.fillStyle = p.skin;
-  ctx.beginPath(); ctx.ellipse(100,110,46,50,0,0,Math.PI*2); ctx.fill();
-
-  // Hair fringe (top)
-  ctx.fillStyle = p.hair;
-  ctx.beginPath();
-  ctx.moveTo(50,95);
-  ctx.bezierCurveTo(52,62,148,62,150,95);
-  ctx.bezierCurveTo(140,80,60,80,50,95);
-  ctx.fill();
-
-  // Side hair
-  ctx.beginPath(); ctx.ellipse(57,112,11,33,-0.15,0,Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.ellipse(143,112,11,33,0.15,0,Math.PI*2); ctx.fill();
-
-  const drawEye = (ex,ey) => {
-    // White sclera
-    ctx.fillStyle='#fff';
-    ctx.beginPath(); ctx.ellipse(ex,ey,13,15,0,0,Math.PI*2); ctx.fill();
-    // Iris
-    ctx.fillStyle = p.hair;
-    ctx.beginPath(); ctx.ellipse(ex,ey+1,9,10,0,0,Math.PI*2); ctx.fill();
-    // Pupil
-    ctx.fillStyle='#111827';
-    ctx.beginPath(); ctx.ellipse(ex+.5,ey+1.5,5,6,0,0,Math.PI*2); ctx.fill();
-    // Main sparkle
-    ctx.fillStyle='#fff';
-    ctx.beginPath(); ctx.arc(ex+3,ey-2,3,0,Math.PI*2); ctx.fill();
-    // Tiny sparkle
-    ctx.beginPath(); ctx.arc(ex-3,ey+3,1.5,0,Math.PI*2); ctx.fill();
-    // Eyelash hint (top)
-    ctx.strokeStyle='#1F2937'; ctx.lineWidth=1.5; ctx.lineCap='round';
-    ctx.beginPath(); ctx.moveTo(ex-10,ey-13); ctx.lineTo(ex-6,ey-16); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(ex,ey-15);    ctx.lineTo(ex+1,ey-18); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(ex+8,ey-13);  ctx.lineTo(ex+12,ey-15); ctx.stroke();
+  img.onerror = () => {
+    // fallback: tenta de novo com prompt mais simples
+    const img2 = new Image();
+    img2.style.cssText = img.style.cssText;
+    img2.src = `https://image.pollinations.ai/prompt/${encodeURIComponent('Studio Ghibli anime character portrait, Brazilian educator, friendly, watercolor, Miyazaki style')}&width=300&height=300&nologo=true&seed=${Math.floor(Math.random()*9999)}`;
+    img2.onload = () => { wrap.innerHTML = ''; wrap.appendChild(img2); };
+    img2.onerror = () => { wrap.innerHTML = '<span style="font-size:64px">🧑‍🏫</span>'; };
   };
-
-  drawEye(80, 108);
-  drawEye(120, 108);
-
-  // Eyebrows
-  ctx.strokeStyle = p.hair; ctx.lineWidth=2.5; ctx.lineCap='round';
-  ctx.beginPath(); ctx.moveTo(67,93); ctx.quadraticCurveTo(80,88,93,93); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(107,93); ctx.quadraticCurveTo(120,88,133,93); ctx.stroke();
-
-  // Nose
-  ctx.fillStyle='#E8AC80';
-  ctx.beginPath(); ctx.ellipse(100,124,4,2.5,0,0,Math.PI*2); ctx.fill();
-
-  // Mouth
-  ctx.strokeStyle='#C97B5A'; ctx.lineWidth=2; ctx.lineCap='round';
-  ctx.beginPath(); ctx.moveTo(88,135); ctx.quadraticCurveTo(100,143,112,135); ctx.stroke();
-
-  // Rosy cheeks
-  ctx.fillStyle='rgba(255,140,130,0.3)';
-  ctx.beginPath(); ctx.ellipse(68,128,13,9,0.3,0,Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.ellipse(132,128,13,9,-0.3,0,Math.PI*2); ctx.fill();
-
-  // Name badge at bottom
-  const parts = nome ? nome.trim().split(' ') : ['?'];
-  const abbrev = parts.length > 1
-    ? (parts[0][0] + parts[parts.length-1][0]).toUpperCase()
-    : (parts[0][0] || '?').toUpperCase();
-
-  ctx.fillStyle = p.hair;
-  ctx.beginPath(); ctx.roundRect(72,162,56,26,8); ctx.fill();
-  ctx.fillStyle='#fff';
-  ctx.font = 'bold 14px "Fredoka One", cursive';
-  ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText(abbrev, 100, 175);
+  img.src = `https://image.pollinations.ai/prompt/${prompt}&width=300&height=300&nologo=true&seed=${Math.floor(Math.random()*9999)}`;
 }
 
 /* ═══════════════ SHARE WHATSAPP ═══════════════ */
@@ -778,6 +705,26 @@ async function onSpinEnd(winIdx){
   document.getElementById('spin-btn').disabled = true;
   document.getElementById('spin-tip').textContent = 'Você já girou neste cadastro!';
   box.style.display = 'block';
+  document.getElementById('result-btns').style.display = 'flex';
+}
+
+function shareResultWhatsApp(){
+  const title = document.getElementById('res-title').textContent;
+  const msg   = document.getElementById('res-msg').textContent;
+  const url   = window.location.href.split('?')[0];
+  const txt   = encodeURIComponent(
+    `🎡 *Girei a Roleta da Rede de Secretários de Educação!*\n\n${title}\n${msg}\n\n👉 Participe também: ${url}`
+  );
+  window.open(`https://wa.me/?text=${txt}`, '_blank');
+}
+
+function tentarNovamente(){
+  hasSpun = false;
+  document.getElementById('result-box').style.display = 'none';
+  document.getElementById('result-btns').style.display = 'none';
+  document.getElementById('spin-btn').disabled = false;
+  document.getElementById('spin-tip').textContent = '👆 Toque no botão para girar!';
+  drawWheel(document.getElementById('wheel'), wheelRotation);
 }
 
 /* ═══════════════ CONFETTI ═══════════════ */
