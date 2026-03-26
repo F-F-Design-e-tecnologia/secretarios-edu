@@ -326,6 +326,14 @@ footer a:hover{opacity:.7}
         <button class="btn-wpp" onclick="shareResultWhatsApp()" style="width:100%;padding:12px;border:none;border-radius:12px;background:#25D366;color:#fff;font-family:'Fredoka One',cursive;font-size:15px;cursor:pointer">📤 Compartilhar resultado</button>
         <button class="btn-outline" onclick="tentarNovamente()" style="width:100%;padding:11px;border-radius:12px;background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.3);font-family:'Fredoka One',cursive;font-size:15px;cursor:pointer">🔄 Tentar novamente</button>
       </div>
+      <!-- Referral block — shown after spin -->
+      <div id="ref-block" style="display:none;margin-top:18px;background:rgba(255,255,255,0.12);border-radius:14px;padding:16px;border:2px solid rgba(255,255,255,0.25)">
+        <div style="font-family:'Fredoka One',cursive;font-size:15px;margin-bottom:6px">🔗 Seu link de indicação</div>
+        <div style="font-size:12px;opacity:.8;margin-bottom:10px">Indique colegas e concorra ao <strong>sorteio exclusivo de indicadores!</strong></div>
+        <div id="ref-link-display" style="background:rgba(0,0,0,.2);border-radius:8px;padding:8px 10px;font-size:11px;word-break:break-all;margin-bottom:10px;font-family:monospace"></div>
+        <button onclick="copiarRefLink()" style="width:100%;padding:10px;border:none;border-radius:10px;background:var(--amarelo);color:var(--azul);font-family:'Fredoka One',cursive;font-size:14px;cursor:pointer;margin-bottom:6px">📋 Copiar link</button>
+        <button onclick="shareRefWhatsApp()" style="width:100%;padding:10px;border:none;border-radius:10px;background:#25D366;color:#fff;font-family:'Fredoka One',cursive;font-size:14px;cursor:pointer">📲 Enviar pelo WhatsApp</button>
+      </div>
     </div>
 
     <button class="btn btn-outline" style="margin-top:16px" onclick="goBack()">← Voltar ao perfil</button>
@@ -356,6 +364,9 @@ let currentUser = {};
 let wheelRotation = 0;
 let isSpinning = false;
 let hasSpun = false;
+
+// Captura código de referência da URL (?ref=CODIGO)
+const REF_CODE = new URLSearchParams(window.location.search).get('ref') || null;
 
 /* ═══════════════ SEGMENTS ═══════════════ */
 const SEGS = [
@@ -395,12 +406,20 @@ function validate(){
   const outro  = document.getElementById('f-outro').value.trim();
   const wpp    = document.getElementById('f-wpp').value.replace(/\D/g,'');
   let ok = true;
-  const set = (id, show) => { document.getElementById(id).style.display = show ? 'block' : 'none'; if(show) ok=false; };
-  set('e-nome',   !nome);
-  set('e-cidade', !cidade);
-  set('e-funcao', !funcao);
-  set('e-outro',  funcao === 'Outro' && !outro);
-  set('e-wpp',    wpp.length < 10);
+  const set = (id, show, msg) => {
+    const el = document.getElementById(id);
+    if(msg) el.textContent = msg;
+    el.style.display = show ? 'block' : 'none';
+    if(show) ok=false;
+  };
+  const nomeInvalido = !nome;
+  const nomeComNumero = /\d/.test(nome);
+  set('e-nome', nomeInvalido, 'Informe seu nome completo.');
+  if(!nomeInvalido) set('e-nome', nomeComNumero, 'Nome não pode conter números.');
+  set('e-cidade', !cidade, null);
+  set('e-funcao', !funcao, null);
+  set('e-outro',  funcao === 'Outro' && !outro, null);
+  set('e-wpp',    wpp.length < 10, null);
   return ok;
 }
 
@@ -416,13 +435,23 @@ async function submitForm(){
   const wpp    = document.getElementById('f-wpp').value.replace(/\D/g,'');
 
   try {
+    // Verifica se WhatsApp já cadastrado
+    const { data: existing } = await sb.from('secretarios')
+      .select('id').eq('whatsapp', wpp).eq('evento', EVENTO_ID).maybeSingle();
+
+    if(existing){
+      hideLoading();
+      alert('⚠️ Este WhatsApp já está cadastrado neste evento!\n\nSe precisar corrigir seus dados, fale com o organizador.');
+      return;
+    }
+
     const { error } = await sb.from('secretarios').insert([
-      { nome, cidade, funcao, whatsapp: wpp, evento: EVENTO_ID }
+      { nome, cidade, funcao, whatsapp: wpp, evento: EVENTO_ID, referido_por: REF_CODE }
     ]);
 
     if(error && error.code !== '23505') throw error;
 
-    currentUser = { nome, cidade, funcao, wpp };
+    currentUser = { nome, cidade, funcao, wpp, refCode: wpp }; // refCode = número WPP (único e sem dados extras)
     hideLoading();
     goToAvatar();
   } catch(e){
@@ -706,6 +735,40 @@ async function onSpinEnd(winIdx){
   document.getElementById('spin-tip').textContent = 'Você já girou neste cadastro!';
   box.style.display = 'block';
   document.getElementById('result-btns').style.display = 'flex';
+
+  // Mostra bloco de indicação
+  showRefBlock();
+}
+
+function showRefBlock(){
+  const base = window.location.href.split('?')[0];
+  const refCode = currentUser.wpp; // usa WhatsApp como código único
+  const refUrl = `${base}?ref=${refCode}`;
+  currentUser.refUrl = refUrl;
+  document.getElementById('ref-link-display').textContent = refUrl;
+  document.getElementById('ref-block').style.display = 'block';
+}
+
+function copiarRefLink(){
+  navigator.clipboard.writeText(currentUser.refUrl || '').then(() => {
+    alert('✅ Link copiado!');
+  }).catch(() => {
+    // fallback
+    const el = document.createElement('textarea');
+    el.value = currentUser.refUrl || '';
+    document.body.appendChild(el); el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    alert('✅ Link copiado!');
+  });
+}
+
+function shareRefWhatsApp(){
+  const url = encodeURIComponent(currentUser.refUrl || '');
+  const txt = encodeURIComponent(
+    `🏫 *Rede de Secretários de Educação*\n\nOlá! Faça seu cadastro para receber atas, editais e licitações direto no WhatsApp — e concorra a R$100 no Pix!\n\n👉 Acesse pelo meu link: ${decodeURIComponent(url)}`
+  );
+  window.open(`https://wa.me/?text=${txt}`, '_blank');
 }
 
 function shareResultWhatsApp(){
@@ -722,6 +785,7 @@ function tentarNovamente(){
   hasSpun = false;
   document.getElementById('result-box').style.display = 'none';
   document.getElementById('result-btns').style.display = 'none';
+  document.getElementById('ref-block').style.display = 'none';
   document.getElementById('spin-btn').disabled = false;
   document.getElementById('spin-tip').textContent = '👆 Toque no botão para girar!';
   drawWheel(document.getElementById('wheel'), wheelRotation);
