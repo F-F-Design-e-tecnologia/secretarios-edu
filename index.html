@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rede Secretários de Educação 🎓</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:#EBF3FF;min-height:100vh;overflow-x:hidden}
+:root{
+  --azul:#1a3a6b;--verde:#00C37A;--amarelo:#FFD93D;--laranja:#FF6B35;
+  --roxo:#7C3AED;--cinza:#F5F7FA;--branco:#fff;--borda:#E2E8F0;
+}
+
+/* ── CONFETTI ── */
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:9999}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(145deg,#1a3a6b 0%,#1D4ED8 100%);
+  padding:48px 20px 76px;text-align:center;position:relative;overflow:hidden
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='0.04'%3E%3Cpath d='M0 0h40v40H0zm40 40h40v40H40z'/%3E%3C/g%3E%3C/svg%3E")
+}
+.hero-icon{font-size:62px;display:block;margin-bottom:14px;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.hero h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,6vw,44px);color:#fff;line-height:1.2;margin-bottom:10px}
+.hero h1 em{color:var(--amarelo);font-style:normal}
+.hero p{color:rgba(255,255,255,.82);font-size:15px;max-width:420px;margin:0 auto;font-weight:600}
+
+/* ── STEPS ── */
+.steps{display:flex;max-width:460px;margin:-28px auto 0;padding:0 16px;gap:8px;position:relative;z-index:10}
+.step{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
+  padding:9px 4px;border-radius:50px;font-weight:800;font-size:11px;
+  background:var(--branco);color:#C0C0C0;box-shadow:0 4px 14px rgba(0,0,0,.1);transition:all .35s
+}
+.step.active{background:var(--verde);color:#fff}
+.step.done{background:var(--amarelo);color:var(--azul)}
+.step-n{
+  width:20px;height:20px;border-radius:50%;
+  background:rgba(0,0,0,.1);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800
+}
+
+/* ── CARD ── */
+.card{
+  background:var(--branco);border-radius:24px;padding:28px 24px;
+  max-width:460px;margin:22px auto;box-shadow:0 8px 40px rgba(26,58,107,.1)
+}
+.card h2{font-family:'Fredoka One',cursive;color:var(--azul);font-size:22px;margin-bottom:4px}
+.card .sub{color:#888;font-size:14px;margin-bottom:22px}
+
+/* ── FIELDS ── */
+.field{margin-bottom:16px}
+.field label{display:block;font-weight:700;color:var(--azul);font-size:13px;margin-bottom:5px}
+.field input,.field select{
+  width:100%;padding:13px 15px;border:2px solid var(--borda);border-radius:12px;
+  font-family:'Nunito',sans-serif;font-size:15px;color:#2d3748;background:var(--cinza);
+  outline:none;transition:border .2s,box-shadow .2s;appearance:none;-webkit-appearance:none
+}
+.field input:focus,.field select:focus{
+  border-color:var(--verde);box-shadow:0 0 0 4px rgba(0,195,122,.14);background:#fff
+}
+.field input::placeholder{color:#C0C4CC}
+.phone-row{display:flex;gap:8px}
+.phone-flag{
+  padding:13px 12px;background:var(--cinza);border:2px solid var(--borda);
+  border-radius:12px;font-size:18px;display:flex;align-items:center;white-space:nowrap
+}
+.err{color:#E53E3E;font-size:12px;margin-top:4px;display:none;font-weight:700}
+
+/* ── BUTTONS ── */
+.btn{
+  width:100%;padding:15px;border:none;border-radius:14px;
+  font-family:'Fredoka One',cursive;font-size:18px;cursor:pointer;transition:transform .15s,box-shadow .15s
+}
+.btn:active{transform:scale(.97)}
+.btn-green{background:linear-gradient(135deg,var(--verde),#00A066);color:#fff;box-shadow:0 5px 22px rgba(0,195,122,.3)}
+.btn-green:hover{box-shadow:0 7px 30px rgba(0,195,122,.45)}
+.btn-outline{background:var(--cinza);color:var(--azul);border:2px solid var(--borda)}
+
+/* ── AVATAR STAGE ── */
+#s-avatar{display:none}
+#s-avatar .card{text-align:center}
+.av-wrap{
+  width:160px;height:160px;border-radius:50%;
+  border:5px solid var(--amarelo);box-shadow:0 8px 28px rgba(0,0,0,.12);
+  margin:0 auto 14px;overflow:hidden;
+  animation:pop .5s cubic-bezier(.175,.885,.32,1.275)
+}
+#avatar{width:160px;height:160px;display:block}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.av-name{font-family:'Fredoka One',cursive;font-size:21px;color:var(--azul);margin-bottom:3px}
+.av-role{
+  display:inline-block;font-size:13px;font-weight:700;color:var(--verde);
+  background:rgba(0,195,122,.1);padding:3px 13px;border-radius:50px;margin-bottom:4px
+}
+.av-city{font-size:13px;color:#aaa;margin-bottom:16px}
+
+/* ── BADGE ── */
+.badge{
+  display:flex;align-items:center;gap:12px;
+  background:linear-gradient(135deg,var(--amarelo),#FFB347);
+  border-radius:14px;padding:14px 16px;margin-bottom:16px;text-align:left
+}
+.badge-ico{font-size:30px}
+.badge-txt strong{display:block;font-size:14px;color:var(--azul);font-weight:800}
+.badge-txt span{font-size:12px;color:var(--azul);opacity:.75}
+
+/* ── QR ── */
+.qr-section{
+  border:2px dashed var(--borda);border-radius:16px;padding:14px;
+  margin-bottom:16px;display:flex;flex-direction:column;align-items:center;gap:6px
+}
+.qr-section p{font-size:12px;color:#aaa;font-weight:700;letter-spacing:.3px}
+#qrcode canvas,#qrcode img{border-radius:8px}
+
+/* ── SHARE ── */
+.share-row{display:flex;gap:10px;margin-bottom:0}
+.btn-wpp{
+  flex:1;padding:13px;border:none;border-radius:12px;background:#25D366;color:#fff;
+  font-family:'Fredoka One',cursive;font-size:15px;cursor:pointer;transition:transform .15s;
+  box-shadow:0 4px 14px rgba(37,211,102,.3)
+}
+.btn-wpp:active{transform:scale(.96)}
+.btn-spin{
+  flex:1;padding:13px;border:none;border-radius:12px;
+  background:linear-gradient(135deg,var(--roxo),#5B21B6);color:#fff;
+  font-family:'Fredoka One',cursive;font-size:15px;cursor:pointer;transition:transform .15s;
+  box-shadow:0 4px 14px rgba(124,58,237,.3)
+}
+.btn-spin:active{transform:scale(.96)}
+
+/* ── WHEEL STAGE ── */
+#s-roleta{display:none}
+#s-roleta .card{text-align:center}
+.wheel-wrap{position:relative;display:inline-block;margin-bottom:6px}
+#wheel{border-radius:50%;box-shadow:0 8px 36px rgba(26,58,107,.15);display:block}
+.ptr{
+  position:absolute;top:-16px;left:50%;transform:translateX(-50%);
+  font-size:30px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))
+}
+.spin-tip{font-size:13px;color:#aaa;margin-bottom:16px;font-weight:600}
+
+.spin-btn{
+  width:100%;padding:15px;border:none;border-radius:14px;
+  font-family:'Fredoka One',cursive;font-size:18px;cursor:pointer;
+  background:linear-gradient(135deg,var(--laranja),#D84315);color:#fff;
+  box-shadow:0 5px 22px rgba(255,107,53,.3);transition:transform .15s,box-shadow .15s
+}
+.spin-btn:hover{box-shadow:0 7px 30px rgba(255,107,53,.45)}
+.spin-btn:active{transform:scale(.97)}
+.spin-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* winner-already banner */
+.winner-alert{
+  background:linear-gradient(135deg,#FFF3CD,#FFE082);
+  border-radius:14px;padding:14px 16px;margin-bottom:16px;display:none;text-align:left;
+  border:2px solid var(--amarelo)
+}
+.winner-alert strong{display:block;color:var(--azul);font-size:14px;font-weight:800;margin-bottom:2px}
+.winner-alert span{font-size:13px;color:var(--azul);opacity:.8}
+
+.result-box{
+  border-radius:16px;padding:20px;margin-top:16px;display:none;
+  animation:pop .4s cubic-bezier(.175,.885,.32,1.275)
+}
+.result-box.win{background:linear-gradient(135deg,var(--azul),#1D4ED8);color:#fff}
+.result-box.fun{background:linear-gradient(135deg,var(--amarelo),#FFCA28);color:var(--azul)}
+.result-box.taken{background:linear-gradient(135deg,#E8EAED,#D5DAE0);color:#444}
+.result-big{font-size:40px;margin-bottom:4px}
+.result-title{font-family:'Fredoka One',cursive;font-size:20px;margin-bottom:6px}
+.result-msg{font-size:13px;opacity:.85;line-height:1.5}
+
+/* ── LOADING ── */
+.loading{
+  position:fixed;inset:0;background:rgba(255,255,255,.88);z-index:500;
+  display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px
+}
+.loading.show{display:flex}
+.spinner{
+  width:44px;height:44px;border:4px solid var(--borda);
+  border-top-color:var(--verde);border-radius:50%;animation:spin 1s linear infinite
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading p{font-weight:700;color:var(--azul);font-size:14px}
+
+/* ── FOOTER ── */
+footer{text-align:center;padding:20px 16px 30px;font-size:12px;color:#bbb}
+footer a{color:var(--azul);opacity:.4;text-decoration:none}
+footer a:hover{opacity:.7}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+<div class="loading" id="loading"><div class="spinner"></div><p id="loading-txt">Salvando...</p></div>
+
+<!-- ── HERO ── -->
+<header class="hero">
+  <span class="hero-icon">🏫</span>
+  <h1>Rede de <em>Secretários</em><br>de Educação</h1>
+  <p>Cadastre-se · Ganhe um <strong style="color:var(--amarelo)">avatar exclusivo</strong> · Concorra a <strong style="color:var(--amarelo)">R$100 no Pix! 💰</strong></p>
+</header>
+
+<!-- ── STEPS ── -->
+<div class="steps">
+  <div class="step active" id="stp1"><div class="step-n">1</div> Dados</div>
+  <div class="step" id="stp2"><div class="step-n">2</div> Avatar</div>
+  <div class="step" id="stp3"><div class="step-n">3</div> Roleta</div>
+</div>
+
+<!-- ══ STAGE 1: FORM ══ -->
+<section id="s-form">
+  <div class="card">
+    <h2>📋 Seu Cadastro</h2>
+    <p class="sub">Preencha para entrar na rede oficial de comunicação.</p>
+
+    <div class="field">
+      <label>👤 Nome completo</label>
+      <input id="f-nome" type="text" placeholder="Ex: Maria da Silva" autocomplete="off">
+      <div class="err" id="e-nome">Informe seu nome completo.</div>
+    </div>
+
+    <div class="field">
+      <label>🏙️ Cidade</label>
+      <input id="f-cidade" type="text" placeholder="Ex: Salvador" autocomplete="off">
+      <div class="err" id="e-cidade">Informe sua cidade.</div>
+    </div>
+
+    <div class="field">
+      <label>🎓 Função</label>
+      <select id="f-funcao" onchange="toggleOutro(this.value)">
+        <option value="">Selecione sua função…</option>
+        <option>Secretário(a) de Educação</option>
+        <option>Secretário(a) Adjunto(a)</option>
+        <option>Diretor(a) de Educação</option>
+        <option>Coordenador(a) Pedagógico(a)</option>
+        <option>Técnico(a) de Educação</option>
+        <option>Outro</option>
+      </select>
+      <div class="err" id="e-funcao">Selecione sua função.</div>
+    </div>
+
+    <div class="field" id="field-outro" style="display:none;margin-top:-8px">
+      <label>✏️ Qual é a sua função?</label>
+      <input id="f-outro" type="text" placeholder="Ex: Assessor Pedagógico, Supervisor…" autocomplete="off">
+      <div class="err" id="e-outro">Descreva sua função.</div>
+    </div>
+
+    <div class="field">
+      <label>📱 WhatsApp</label>
+      <div class="phone-row">
+        <div class="phone-flag">🇧🇷 +55</div>
+        <input id="f-wpp" type="tel" placeholder="(11) 9 9999-9999" maxlength="16">
+      </div>
+      <div class="err" id="e-wpp">Número inválido. Use (DD) 9 XXXX-XXXX.</div>
+    </div>
+
+    <button class="btn btn-green" onclick="submitForm()">🚀 Entrar na Rede!</button>
+  </div>
+</section>
+
+<!-- ══ STAGE 2: AVATAR ══ -->
+<section id="s-avatar">
+  <div class="card">
+    <div class="av-wrap"><canvas id="avatar" width="200" height="200"></canvas></div>
+    <div class="av-name" id="av-nome">—</div>
+    <div class="av-role" id="av-funcao">—</div>
+    <div class="av-city" id="av-city">📍 —</div>
+
+    <div class="badge">
+      <div class="badge-ico">✅</div>
+      <div class="badge-txt">
+        <strong>Cadastro confirmado!</strong>
+        <span>Você receberá atas e licitações direto no WhatsApp.</span>
+      </div>
+    </div>
+
+    <div class="qr-section">
+      <p>📲 COMPARTILHE ESTE QR CODE</p>
+      <div id="qrcode"></div>
+      <p style="font-size:11px;color:#ccc">Aponte a câmera para convidar colegas</p>
+    </div>
+
+    <div class="share-row">
+      <button class="btn-wpp" onclick="shareWhatsApp()">📤 Compartilhar</button>
+      <button class="btn-spin" onclick="goToRoleta()">🎡 Girar Roleta!</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══ STAGE 3: ROLETA ══ -->
+<section id="s-roleta">
+  <div class="card">
+    <h2>🎡 Roleta da Sorte</h2>
+    <p class="sub">1 sorteio por evento · Apenas um ganhador!</p>
+
+    <div class="winner-alert" id="winner-alert">
+      <strong>🏆 Já temos um ganhador!</strong>
+      <span id="winner-alert-txt">O prêmio já foi sorteado neste evento.</span>
+    </div>
+
+    <div class="wheel-wrap">
+      <div class="ptr">▼</div>
+      <canvas id="wheel" width="280" height="280"></canvas>
+    </div>
+    <p class="spin-tip" id="spin-tip">👆 Toque no botão para girar!</p>
+
+    <button class="spin-btn" id="spin-btn" onclick="spinWheel()">🎰 GIRAR!</button>
+
+    <div class="result-box" id="result-box">
+      <div class="result-big" id="res-emoji">🎉</div>
+      <div class="result-title" id="res-title">Parabéns!</div>
+      <div class="result-msg" id="res-msg">Você ganhou!</div>
+    </div>
+
+    <button class="btn btn-outline" style="margin-top:16px" onclick="goBack()">← Voltar ao perfil</button>
+  </div>
+</section>
+
+<footer>
+  Rede Oficial de Secretários de Educação · 2025
+  &nbsp;·&nbsp; <a href="admin.html">Admin</a>
+</footer>
+
+<!-- ── CDNs ── -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+<script>
+/* ════════════════════════════════════════
+   ⚙️  CONFIGURAÇÃO — preencha suas chaves
+════════════════════════════════════════ */
+const SUPA_URL  = 'https://XXXXX.supabase.co';   // ← cole aqui
+const SUPA_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.XXXXX'; // ← anon key
+const EVENTO_ID = 'evento-2025-01';               // ← mude a cada evento
+
+/* ═══════════════ SUPABASE INIT ═══════════════ */
+const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
+/* ═══════════════ STATE ═══════════════ */
+let currentUser = {};
+let wheelRotation = 0;
+let isSpinning = false;
+let hasSpun = false;
+
+/* ═══════════════ SEGMENTS ═══════════════ */
+const SEGS = [
+  { label:['Participe','mais!'],   emoji:'🎉', color:'#4ECDC4' },
+  { label:['Ata','entregue!'],     emoji:'📋', color:'#F7B731' },
+  { label:['R$100','no Pix! 💰'],  emoji:'💸', color:'#FF6B6B', prize:true },
+  { label:['Destaque','do evento'],emoji:'🏆', color:'#A855F7' },
+  { label:['Continue','assim!'],   emoji:'⭐', color:'#3B82F6' },
+  { label:['Educação','em ação!'], emoji:'📚', color:'#10B981' },
+  { label:['Rede','ativa!'],       emoji:'🤝', color:'#F59E0B' },
+  { label:['Missão','cumprida!'],  emoji:'🎓', color:'#EC4899' },
+];
+
+/* ═══════════════ PHONE MASK ═══════════════ */
+document.getElementById('f-wpp').addEventListener('input', function(){
+  let v = this.value.replace(/\D/g,'');
+  if(v.length > 11) v = v.slice(0,11);
+  if(v.length > 7)      v = v.replace(/^(\d{2})(\d{1})(\d{4})(\d{0,4})/,'($1) $2 $3-$4');
+  else if(v.length > 6) v = v.replace(/^(\d{2})(\d{1})(\d{0,4})/,'($1) $2 $3');
+  else if(v.length > 2) v = v.replace(/^(\d{2})(\d{0,1})/,'($1) $2');
+  else if(v.length > 0) v = v.replace(/^(\d{0,2})/,'($1');
+  this.value = v;
+});
+
+/* ═══════════════ OUTRO FIELD ═══════════════ */
+function toggleOutro(val){
+  const show = val === 'Outro';
+  document.getElementById('field-outro').style.display = show ? 'block' : 'none';
+  if(!show) document.getElementById('f-outro').value = '';
+}
+
+/* ═══════════════ FORM VALIDATE ═══════════════ */
+function validate(){
+  const nome   = document.getElementById('f-nome').value.trim();
+  const cidade = document.getElementById('f-cidade').value.trim();
+  const funcao = document.getElementById('f-funcao').value;
+  const outro  = document.getElementById('f-outro').value.trim();
+  const wpp    = document.getElementById('f-wpp').value.replace(/\D/g,'');
+  let ok = true;
+  const set = (id, show) => { document.getElementById(id).style.display = show ? 'block' : 'none'; if(show) ok=false; };
+  set('e-nome',   !nome);
+  set('e-cidade', !cidade);
+  set('e-funcao', !funcao);
+  set('e-outro',  funcao === 'Outro' && !outro);
+  set('e-wpp',    wpp.length < 10);
+  return ok;
+}
+
+/* ═══════════════ FORM SUBMIT ═══════════════ */
+async function submitForm(){
+  if(!validate()) return;
+  showLoading('Salvando seu cadastro…');
+  const nome   = document.getElementById('f-nome').value.trim();
+  const cidade = document.getElementById('f-cidade').value.trim();
+  const sel    = document.getElementById('f-funcao').value;
+  const outro  = document.getElementById('f-outro').value.trim();
+  const funcao = sel === 'Outro' ? outro : sel;
+  const wpp    = document.getElementById('f-wpp').value.replace(/\D/g,'');
+
+  try {
+    const { data, error } = await sb.from('secretarios').insert([
+      { nome, cidade, funcao, whatsapp: wpp, evento: EVENTO_ID }
+    ]).select().single();
+
+    if(error && error.code !== '23505') throw error; // ignore duplicate
+
+    currentUser = { nome, cidade, funcao, wpp, id: data?.id };
+    hideLoading();
+    goToAvatar();
+  } catch(e){
+    hideLoading();
+    alert('Erro ao salvar: ' + e.message + '\n\nVerifique a configuração do Supabase no topo do arquivo index.html.');
+  }
+}
+
+/* ═══════════════ AVATAR STAGE ═══════════════ */
+function goToAvatar(){
+  document.getElementById('s-form').style.display = 'none';
+  document.getElementById('s-avatar').style.display = 'block';
+
+  document.getElementById('av-nome').textContent  = currentUser.nome;
+  document.getElementById('av-funcao').textContent = currentUser.funcao;
+  document.getElementById('av-city').textContent   = '📍 ' + currentUser.cidade;
+
+  // Step indicator
+  document.getElementById('stp1').className = 'step done';
+  document.getElementById('stp2').className = 'step active';
+
+  // Draw Ghibli avatar
+  drawGhibliAvatar(document.getElementById('avatar'), currentUser.nome, currentUser.funcao);
+
+  // QR Code
+  document.getElementById('qrcode').innerHTML = '';
+  new QRCode(document.getElementById('qrcode'), {
+    text: window.location.href.split('?')[0],
+    width: 100, height: 100,
+    colorDark:'#1a3a6b', colorLight:'#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+
+  launchConfetti();
+}
+
+/* ═══════════════ DRAW GHIBLI AVATAR ═══════════════ */
+function drawGhibliAvatar(canvas, nome, funcao){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  const PALETTES = {
+    'Secretário(a) de Educação':    { hair:'#3B82F6', bg1:'#EFF6FF', bg2:'#BFDBFE', skin:'#FFE4C4' },
+    'Secretário(a) Adjunto(a)':     { hair:'#0D9488', bg1:'#F0FDFA', bg2:'#99F6E4', skin:'#FDDBB8' },
+    'Diretor(a) de Educação':       { hair:'#7C3AED', bg1:'#F5F3FF', bg2:'#DDD6FE', skin:'#FFE4C4' },
+    'Coordenador(a) Pedagógico(a)': { hair:'#D97706', bg1:'#FFFBEB', bg2:'#FDE68A', skin:'#FDDBB8' },
+    'Técnico(a) de Educação':       { hair:'#059669', bg1:'#ECFDF5', bg2:'#A7F3D0', skin:'#FFE4C4' },
+    'Outro':                        { hair:'#DB2777', bg1:'#FDF2F8', bg2:'#FBCFE8', skin:'#FDDBB8' },
+  };
+  const p = PALETTES[funcao] || PALETTES['Outro'];
+
+  // Background gradient
+  const g = ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0, p.bg1); g.addColorStop(1, p.bg2);
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.roundRect(0,0,W,H,0); ctx.fill();
+
+  // Sparkles in bg
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  [[30,28],[165,22],[20,155],[170,160],[10,80],[185,95],[100,15]].forEach(([x,y])=>{
+    ctx.beginPath(); ctx.arc(x,y,2.5,0,Math.PI*2); ctx.fill();
+  });
+  // Small cross sparkle
+  const starDraw = (cx,cy,r,c) => {
+    ctx.fillStyle=c;
+    for(let a=0;a<4;a++){
+      ctx.beginPath();
+      ctx.moveTo(cx,cy);
+      ctx.ellipse(cx+Math.cos(a*Math.PI/2)*r,cy+Math.sin(a*Math.PI/2)*r,r*.3,r*.3,0,0,Math.PI*2);
+      ctx.fill();
+    }
+  };
+  starDraw(168,28,6,p.hair+'99');
+  starDraw(22,170,5,p.hair+'88');
+
+  // Hair (back)
+  ctx.fillStyle = p.hair;
+  ctx.beginPath(); ctx.ellipse(100,95,56,64,0,0,Math.PI*2); ctx.fill();
+
+  // Face
+  ctx.fillStyle = p.skin;
+  ctx.beginPath(); ctx.ellipse(100,110,46,50,0,0,Math.PI*2); ctx.fill();
+
+  // Hair fringe (top)
+  ctx.fillStyle = p.hair;
+  ctx.beginPath();
+  ctx.moveTo(50,95);
+  ctx.bezierCurveTo(52,62,148,62,150,95);
+  ctx.bezierCurveTo(140,80,60,80,50,95);
+  ctx.fill();
+
+  // Side hair
+  ctx.beginPath(); ctx.ellipse(57,112,11,33,-0.15,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(143,112,11,33,0.15,0,Math.PI*2); ctx.fill();
+
+  const drawEye = (ex,ey) => {
+    // White sclera
+    ctx.fillStyle='#fff';
+    ctx.beginPath(); ctx.ellipse(ex,ey,13,15,0,0,Math.PI*2); ctx.fill();
+    // Iris
+    ctx.fillStyle = p.hair;
+    ctx.beginPath(); ctx.ellipse(ex,ey+1,9,10,0,0,Math.PI*2); ctx.fill();
+    // Pupil
+    ctx.fillStyle='#111827';
+    ctx.beginPath(); ctx.ellipse(ex+.5,ey+1.5,5,6,0,0,Math.PI*2); ctx.fill();
+    // Main sparkle
+    ctx.fillStyle='#fff';
+    ctx.beginPath(); ctx.arc(ex+3,ey-2,3,0,Math.PI*2); ctx.fill();
+    // Tiny sparkle
+    ctx.beginPath(); ctx.arc(ex-3,ey+3,1.5,0,Math.PI*2); ctx.fill();
+    // Eyelash hint (top)
+    ctx.strokeStyle='#1F2937'; ctx.lineWidth=1.5; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(ex-10,ey-13); ctx.lineTo(ex-6,ey-16); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ex,ey-15);    ctx.lineTo(ex+1,ey-18); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ex+8,ey-13);  ctx.lineTo(ex+12,ey-15); ctx.stroke();
+  };
+
+  drawEye(80, 108);
+  drawEye(120, 108);
+
+  // Eyebrows
+  ctx.strokeStyle = p.hair; ctx.lineWidth=2.5; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(67,93); ctx.quadraticCurveTo(80,88,93,93); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(107,93); ctx.quadraticCurveTo(120,88,133,93); ctx.stroke();
+
+  // Nose
+  ctx.fillStyle='#E8AC80';
+  ctx.beginPath(); ctx.ellipse(100,124,4,2.5,0,0,Math.PI*2); ctx.fill();
+
+  // Mouth
+  ctx.strokeStyle='#C97B5A'; ctx.lineWidth=2; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(88,135); ctx.quadraticCurveTo(100,143,112,135); ctx.stroke();
+
+  // Rosy cheeks
+  ctx.fillStyle='rgba(255,140,130,0.3)';
+  ctx.beginPath(); ctx.ellipse(68,128,13,9,0.3,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(132,128,13,9,-0.3,0,Math.PI*2); ctx.fill();
+
+  // Name badge at bottom
+  const parts = nome ? nome.trim().split(' ') : ['?'];
+  const abbrev = parts.length > 1
+    ? (parts[0][0] + parts[parts.length-1][0]).toUpperCase()
+    : (parts[0][0] || '?').toUpperCase();
+
+  ctx.fillStyle = p.hair;
+  ctx.beginPath(); ctx.roundRect(72,162,56,26,8); ctx.fill();
+  ctx.fillStyle='#fff';
+  ctx.font = 'bold 14px "Fredoka One", cursive';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(abbrev, 100, 175);
+}
+
+/* ═══════════════ SHARE WHATSAPP ═══════════════ */
+function shareWhatsApp(){
+  const url = encodeURIComponent(window.location.href.split('?')[0]);
+  const txt = encodeURIComponent(
+    `🏫 *Rede de Secretários de Educação*\n\nOlá! Faça seu cadastro para receber atas, editais e licitações direto no WhatsApp.\n\n👉 ${decodeURIComponent(url)}`
+  );
+  window.open(`https://wa.me/?text=${txt}`, '_blank');
+}
+
+/* ═══════════════ ROLETA STAGE ═══════════════ */
+async function goToRoleta(){
+  document.getElementById('s-avatar').style.display = 'none';
+  document.getElementById('s-roleta').style.display = 'block';
+  document.getElementById('stp2').className = 'step done';
+  document.getElementById('stp3').className = 'step active';
+
+  drawWheel(document.getElementById('wheel'), 0);
+
+  // Check if winner already exists
+  showLoading('Verificando sorteio…');
+  try {
+    const { data } = await sb.from('sorteio')
+      .select('*').eq('evento', EVENTO_ID).eq('ativo', true).single();
+
+    hideLoading();
+    if(data && data.winner_nome){
+      document.getElementById('winner-alert-txt').textContent =
+        `🏆 Ganhador(a): ${data.winner_nome} (${data.winner_cidade})`;
+      document.getElementById('winner-alert').style.display = 'block';
+      document.getElementById('spin-btn').disabled = true;
+      document.getElementById('spin-tip').textContent = '🔒 Sorteio encerrado para este evento.';
+    }
+  } catch {
+    hideLoading();
+  }
+}
+
+function goBack(){
+  document.getElementById('s-roleta').style.display = 'none';
+  document.getElementById('s-avatar').style.display = 'block';
+  document.getElementById('stp3').className = 'step';
+  document.getElementById('stp2').className = 'step active';
+}
+
+/* ═══════════════ DRAW WHEEL ═══════════════ */
+function drawWheel(canvas, rotation){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, cx = W/2, cy = W/2, R = cx - 4;
+  const n = SEGS.length;
+  const arc = (Math.PI*2)/n;
+  ctx.clearRect(0,0,W,W);
+
+  SEGS.forEach((seg,i) => {
+    const start = rotation + arc*i - Math.PI/2;
+    const end   = start + arc;
+
+    // Slice
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,R,start,end);
+    ctx.closePath();
+    ctx.fillStyle = seg.color;
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Text inside slice (rotated)
+    ctx.save();
+    ctx.translate(cx,cy);
+    ctx.rotate(start + arc/2);
+    ctx.textAlign = 'right';
+
+    // emoji
+    ctx.font = '16px sans-serif';
+    ctx.fillStyle = '#fff';
+    ctx.fillText(seg.emoji, R-8, 5);
+
+    // two lines of label
+    ctx.font = 'bold 9px Nunito,sans-serif';
+    ctx.fillText(seg.label[0], R-28, -5);
+    ctx.fillText(seg.label[1], R-28,  7);
+    ctx.restore();
+  });
+
+  // Prize ring highlight
+  const prizeIdx = SEGS.findIndex(s=>s.prize);
+  const ps = rotation + arc*prizeIdx - Math.PI/2;
+  ctx.beginPath(); ctx.moveTo(cx,cy);
+  ctx.arc(cx,cy,R,ps,ps+arc); ctx.closePath();
+  ctx.strokeStyle='rgba(255,255,255,0.6)';
+  ctx.lineWidth=4; ctx.stroke();
+
+  // Outer ring
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2);
+  ctx.strokeStyle='rgba(255,255,255,0.9)'; ctx.lineWidth=4; ctx.stroke();
+
+  // Center circle
+  ctx.beginPath(); ctx.arc(cx,cy,28,0,Math.PI*2);
+  ctx.fillStyle='#fff'; ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,.08)'; ctx.lineWidth=2; ctx.stroke();
+  ctx.font='20px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('🎡',cx,cy);
+}
+
+/* ═══════════════ SPIN ═══════════════ */
+async function spinWheel(){
+  if(isSpinning || hasSpun) return;
+  isSpinning = true;
+  document.getElementById('spin-btn').disabled = true;
+  document.getElementById('result-box').style.display = 'none';
+
+  // Pick target segment
+  const winIdx = Math.floor(Math.random() * SEGS.length);
+  const n = SEGS.length;
+  const arc = (Math.PI*2)/n;
+
+  // Calculate final rotation so that winIdx is centered at top
+  const targetMod = ((-(arc*winIdx + arc/2)) % (Math.PI*2) + Math.PI*2) % (Math.PI*2);
+  const currentMod = (wheelRotation % (Math.PI*2) + Math.PI*2) % (Math.PI*2);
+  const extra = (5 + Math.floor(Math.random()*4)) * Math.PI*2;
+  const delta = (targetMod - currentMod + Math.PI*2) % (Math.PI*2);
+  const finalRotation = wheelRotation + extra + delta;
+
+  const canvas = document.getElementById('wheel');
+  const startRot = wheelRotation;
+  const startTime = performance.now();
+  const duration = 4500 + Math.random()*800;
+
+  function easeOut(t){ return 1 - Math.pow(1-t, 4); }
+
+  function frame(now){
+    const t = Math.min((now-startTime)/duration, 1);
+    wheelRotation = startRot + (finalRotation-startRot)*easeOut(t);
+    drawWheel(canvas, wheelRotation);
+    if(t < 1){ requestAnimationFrame(frame); }
+    else{
+      wheelRotation = finalRotation;
+      isSpinning = false;
+      hasSpun = true;
+      onSpinEnd(winIdx);
+    }
+  }
+  requestAnimationFrame(frame);
+}
+
+async function onSpinEnd(winIdx){
+  const seg = SEGS[winIdx];
+  const box = document.getElementById('result-box');
+
+  if(seg.prize){
+    // Check & claim prize in Supabase
+    showLoading('Verificando prêmio…');
+    try {
+      // Atomic update: only succeeds if winner_nome IS NULL
+      const { data: updated, error } = await sb.from('sorteio')
+        .update({ winner_nome: currentUser.nome, winner_cidade: currentUser.cidade, winner_id: currentUser.id || null })
+        .eq('evento', EVENTO_ID)
+        .eq('ativo', true)
+        .is('winner_nome', null)
+        .select();
+
+      hideLoading();
+
+      if(updated && updated.length > 0){
+        // Winner!
+        document.getElementById('res-emoji').textContent  = '💰';
+        document.getElementById('res-title').textContent  = 'VOCÊ GANHOU!';
+        document.getElementById('res-msg').innerHTML =
+          `<strong>${currentUser.nome}</strong>, parabéns!<br>R$100 no Pix! Aguarde o contato da organização.`;
+        box.className = 'result-box win';
+        launchConfetti(200);
+      } else {
+        // Prize already taken — fetch winner name
+        const { data: w } = await sb.from('sorteio').select('winner_nome,winner_cidade').eq('evento',EVENTO_ID).single();
+        const nome = w?.winner_nome || 'outro participante';
+        document.getElementById('res-emoji').textContent = '😔';
+        document.getElementById('res-title').textContent = 'Alguém ganhou na frente!';
+        document.getElementById('res-msg').textContent   = `O prêmio já foi para ${nome}. Participe do próximo evento!`;
+        box.className = 'result-box taken';
+        document.getElementById('winner-alert-txt').textContent = `🏆 Ganhador(a): ${nome}`;
+        document.getElementById('winner-alert').style.display = 'block';
+      }
+    } catch(e){
+      hideLoading();
+      document.getElementById('res-emoji').textContent = '⚠️';
+      document.getElementById('res-title').textContent = 'Erro na verificação';
+      document.getElementById('res-msg').textContent   = 'Tente novamente ou fale com o administrador.';
+      box.className = 'result-box taken';
+    }
+  } else {
+    // Fun message
+    const funs = [
+      ['🎉','Participe mais!','Sua presença fortalece a rede!'],
+      ['📋','Ata entregue!','Continue contribuindo com a educação!'],
+      ['🏆','Destaque do Evento!','Você é referência na sua região!'],
+      ['⭐','Continue assim!','A educação agradece seu compromisso!'],
+      ['📚','Educação em ação!','Juntos transformamos o futuro!'],
+      ['🤝','Rede ativa!','Conectado e colaborando — assim avançamos!'],
+      ['🎓','Missão cumprida!','Você faz a diferença todos os dias!'],
+    ];
+    const f = funs[Math.floor(Math.random()*funs.length)];
+    document.getElementById('res-emoji').textContent = f[0];
+    document.getElementById('res-title').textContent = f[1];
+    document.getElementById('res-msg').textContent   = f[2];
+    box.className = 'result-box fun';
+    launchConfetti(60);
+  }
+
+  document.getElementById('spin-btn').disabled = true;
+  document.getElementById('spin-tip').textContent = 'Você já girou neste cadastro!';
+  box.style.display = 'block';
+}
+
+/* ═══════════════ CONFETTI ═══════════════ */
+function launchConfetti(count=120){
+  const canvas = document.getElementById('confetti-canvas');
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  const colors = ['#FFD93D','#00C37A','#FF6B35','#4A90D9','#FF4FA3','#7C3AED','#10B981'];
+  const parts = Array.from({length:count},()=>({
+    x: Math.random()*canvas.width,
+    y: Math.random()*-canvas.height*0.5,
+    vx: (Math.random()-.5)*5,
+    vy: Math.random()*3+2,
+    color: colors[Math.floor(Math.random()*colors.length)],
+    w: Math.random()*10+5,
+    h: Math.random()*5+3,
+    r: Math.random()*Math.PI*2,
+    vr: (Math.random()-.5)*.2,
+  }));
+  let frame=0;
+  const total=180;
+  function anim(){
+    if(frame>total){ctx.clearRect(0,0,canvas.width,canvas.height);return}
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    parts.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.r+=p.vr; p.vy+=.08;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r);
+      ctx.globalAlpha=Math.max(0,1-frame/total);
+      ctx.fillStyle=p.color;
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      ctx.restore();
+    });
+    frame++; requestAnimationFrame(anim);
+  }
+  anim();
+}
+
+/* ═══════════════ LOADING ═══════════════ */
+function showLoading(txt='Carregando…'){
+  document.getElementById('loading-txt').textContent=txt;
+  document.getElementById('loading').classList.add('show');
+}
+function hideLoading(){ document.getElementById('loading').classList.remove('show'); }
+
+/* ═══════════════ INIT WHEEL ═══════════════ */
+window.addEventListener('load',()=> drawWheel(document.getElementById('wheel'),0));
+</script>
+</body>
+</html>
