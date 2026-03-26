@@ -103,6 +103,49 @@ body{font-family:'Nunito',sans-serif;background:#EBF3FF;min-height:100vh;overflo
 }
 .av-city{font-size:13px;color:#aaa;margin-bottom:16px}
 
+.spin-btn{
+  width:100%;padding:15px;border:none;border-radius:14px;
+  font-family:'Fredoka One',cursive;font-size:18px;cursor:pointer;
+  background:linear-gradient(135deg,var(--laranja),#D84315);color:#fff;
+  box-shadow:0 5px 22px rgba(255,107,53,.3);transition:transform .15s,box-shadow .15s;
+  margin-bottom:8px;
+}
+.spin-btn:hover{box-shadow:0 7px 30px rgba(255,107,53,.45)}
+.spin-btn:active{transform:scale(.97)}
+.spin-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* ── ROLETA ── */
+.wheel-wrap{position:relative;display:inline-block;margin-bottom:6px}
+#wheel{border-radius:50%;box-shadow:0 8px 36px rgba(26,58,107,.15);display:block}
+.ptr{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:30px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
+.spin-tip{font-size:13px;color:#aaa;margin-bottom:16px;font-weight:600;text-align:center}
+.spin-btn{
+  width:100%;padding:15px;border:none;border-radius:14px;
+  font-family:'Fredoka One',cursive;font-size:18px;cursor:pointer;
+  background:linear-gradient(135deg,var(--laranja),#D84315);color:#fff;
+  box-shadow:0 5px 22px rgba(255,107,53,.3);transition:transform .15s,box-shadow .15s;display:block
+}
+.spin-btn:hover{box-shadow:0 7px 30px rgba(255,107,53,.45)}
+.spin-btn:active{transform:scale(.97)}
+.spin-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.winner-alert{
+  background:linear-gradient(135deg,#FFF3CD,#FFE082);
+  border-radius:14px;padding:14px 16px;margin-bottom:16px;display:none;text-align:left;
+  border:2px solid var(--amarelo)
+}
+.winner-alert strong{display:block;color:var(--azul);font-size:14px;font-weight:800;margin-bottom:2px}
+.winner-alert span{font-size:13px;color:var(--azul);opacity:.8}
+.result-box{
+  border-radius:16px;padding:20px;margin-top:16px;display:none;
+  animation:pop .4s cubic-bezier(.175,.885,.32,1.275);text-align:center
+}
+.result-box.win{background:linear-gradient(135deg,var(--azul),#1D4ED8);color:#fff}
+.result-box.fun{background:linear-gradient(135deg,var(--amarelo),#FFCA28);color:var(--azul)}
+.result-box.taken{background:linear-gradient(135deg,#E8EAED,#D5DAE0);color:#444}
+.result-big{font-size:40px;margin-bottom:4px}
+.result-title{font-family:'Fredoka One',cursive;font-size:20px;margin-bottom:6px}
+.result-msg{font-size:13px;opacity:.85;line-height:1.5}
+
 /* ── CASINO POPUP ── */
 .casino-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:900;
@@ -174,7 +217,7 @@ body{font-family:'Nunito',sans-serif;background:#EBF3FF;min-height:100vh;overflo
 <header class="hero">
   <span class="hero-icon">🏫</span>
   <h1>Rede de <em>Secretários</em><br>de Educação</h1>
-  <p>Cadastre-se · Ganhe um <strong style="color:var(--amarelo)">avatar exclusivo</strong> · Concorra a <strong style="color:var(--amarelo)">R$100 no Pix! 💰</strong></p>
+  <p>Cadastre-se e concorra a <strong style="color:var(--amarelo)">R$100 no Pix! 💰</strong></p>
 </header>
 
 <!-- ── STEPS ── -->
@@ -237,7 +280,7 @@ body{font-family:'Nunito',sans-serif;background:#EBF3FF;min-height:100vh;overflo
 
 
 <!-- ══ STAGE 3: ROLETA ══ -->
-<section id="s-roleta">
+<section id="s-roleta" style="display:none">
   <div class="card">
     <h2>🎡 Roleta da Sorte</h2>
     <p class="sub">1 sorteio por evento · Apenas um ganhador!</p>
@@ -431,7 +474,7 @@ function shareWhatsApp(){
 
 /* ═══════════════ ROLETA STAGE ═══════════════ */
 async function goToRoleta(){
-  document.getElementById('s-avatar').style.display = 'none';
+  document.getElementById('s-form').style.display = 'none';
   document.getElementById('s-roleta').style.display = 'block';
   document.getElementById('stp3').className = 'step active';
 
