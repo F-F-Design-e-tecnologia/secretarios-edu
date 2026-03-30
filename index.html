@@ -574,11 +574,22 @@ async function doSubmit(){
   if(funcao==='Outro')funcao=document.getElementById('iOutro').value.trim();
   const whatsapp=document.getElementById('iWhats').value.replace(/\D/g,'');
   try{
-    const {data:dup}=await sb.from('cadastros').select('id').eq('whatsapp',whatsapp).eq('evento_id',EVENTO_ID).maybeSingle();
-    if(dup){btn.disabled=false;btn.textContent='Cadastrar e Girar a Roleta 🎯';sE('eWhats','Este WhatsApp já foi cadastrado neste evento!');return}
-    const {data:row,error}=await sb.from('cadastros').insert({nome,cidade,funcao,whatsapp,evento_id:EVENTO_ID,referido_por:refParam||null}).select().single();
-    if(error)throw error;
-    userData=row;goRoleta();
+    const {data:newId,error}=await sb.rpc('cadastrar_usuario',{
+      p_nome:nome,p_cidade:cidade,p_funcao:funcao,
+      p_whatsapp:whatsapp,p_evento_id:EVENTO_ID,
+      p_referido_por:refParam||null
+    });
+    if(error){
+      if(error.message&&error.message.includes('DUPLICATA')){
+        sE('eWhats','Este WhatsApp já foi cadastrado neste evento!');
+      } else if(error.message&&error.message.includes('EVENTO_INATIVO')){
+        toast('Este evento já foi encerrado!');
+      } else throw error;
+      btn.disabled=false;btn.textContent='Cadastrar e Girar a Roleta 🎯';
+      return;
+    }
+    userData={id:newId,nome,cidade,funcao,whatsapp};
+    goRoleta();
   }catch(err){
     console.error(err);toast('Erro ao cadastrar. Tente novamente!');
     btn.disabled=false;btn.textContent='Cadastrar e Girar a Roleta 🎯';
