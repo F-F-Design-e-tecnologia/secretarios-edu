@@ -450,7 +450,7 @@ canvas.wheel{width:290px;height:290px;border-radius:50%}
         <canvas class="wheel" id="cvWheel" width="290" height="290"></canvas>
       </div>
       <button class="btn-spin" id="btnSpin" onclick="spin()">🎯 Girar a Roleta!</button>
-      <p class="spin-note">Você tem <strong>1 chance</strong> — boa sorte!</p>
+      <p class="spin-note">Você tem <strong>1 giro por dia</strong> — boa sorte!</p>
     </div>
   </div>
 
@@ -581,7 +581,17 @@ async function doSubmit(){
     });
     if(error){
       if(error.message&&error.message.includes('DUPLICATA')){
-        sE('eWhats','Este WhatsApp já foi cadastrado neste evento!');
+        // Já cadastrado — buscar ID e mandar pra roleta
+        const {data:existingId}=await sb.rpc('buscar_cadastro_id',{
+          p_whatsapp:whatsapp,p_evento_id:EVENTO_ID
+        });
+        if(existingId){
+          userData={id:existingId,nome,cidade,funcao,whatsapp};
+          toast('Bem-vindo de volta! Gire a roleta!');
+          goRoleta();
+          return;
+        }
+        sE('eWhats','Erro ao recuperar cadastro. Tente novamente.');
       } else if(error.message&&error.message.includes('EVENTO_INATIVO')){
         toast('Este evento já foi encerrado!');
       } else throw error;
@@ -610,12 +620,12 @@ function goRoleta(){
 const SEGS=[
   {label:'R$100\nPIX! 🎉',  color:'#059669', accent:'#34D399'},
   {label:'Quase!',           color:'#1E40AF', accent:'#3B82F6'},
-  {label:'Tente\noutra vez', color:'#334155', accent:'#475569'},
+  {label:'Não foi\ndessa vez', color:'#334155', accent:'#475569'},
   {label:'Boa\nsorte!',      color:'#B45309', accent:'#F59E0B'},
   {label:'Quase\nlá!',       color:'#6D28D9', accent:'#8B5CF6'},
-  {label:'Tente\noutra vez', color:'#334155', accent:'#475569'},
+  {label:'Ihh\npassou!',     color:'#334155', accent:'#475569'},
   {label:'Quase!',           color:'#0E7490', accent:'#22D3EE'},
-  {label:'Tente\noutra vez', color:'#374151', accent:'#6B7280'},
+  {label:'Eita\nfoi perto!', color:'#374151', accent:'#6B7280'},
 ];
 const NS=SEGS.length,ARC=Math.PI*2/NS;
 let wA=0,spinning=false;
@@ -653,11 +663,38 @@ async function spin(){
   if(spinning||spun)return;
   spinning=true;spun=true;
   document.getElementById('btnSpin').disabled=true;
-  let ganhou=false;
+
+  let resultado='NAO_GANHOU';
   try{
-    const {data,error}=await sb.rpc('tentar_ganhar',{p_evento_id:EVENTO_ID,p_cadastro_id:userData.id,p_nome:userData.nome});
-    if(!error&&data===true)ganhou=true;
+    const {data,error}=await sb.rpc('verificar_e_girar',{
+      p_evento_id:EVENTO_ID,
+      p_cadastro_id:userData.id,
+      p_nome:userData.nome
+    });
+    if(!error && data) resultado=data;
+    if(error) console.error(error);
   }catch(e){console.error(e)}
+
+  // Se já girou hoje ou já ganhou, mostra mensagem sem girar
+  if(resultado==='JA_GIROU_HOJE'){
+    spinning=false;
+    document.getElementById('btnSpin').disabled=true;
+    showJaGirou();
+    return;
+  }
+  if(resultado==='JA_GANHOU'){
+    spinning=false;
+    document.getElementById('btnSpin').disabled=true;
+    showJaGanhou();
+    return;
+  }
+  if(resultado==='EVENTO_INATIVO'){
+    spinning=false;
+    toast('Este evento já foi encerrado!');
+    return;
+  }
+
+  const ganhou = resultado==='GANHOU';
   const target=ganhou?0:[1,2,3,4,5,6,7][Math.floor(Math.random()*7)];
   const tAngle=-target*ARC-ARC/2-Math.PI/2;
   const fullSpins=7*Math.PI*2,delta=fullSpins+tAngle-wA;
@@ -672,6 +709,22 @@ async function spin(){
   requestAnimationFrame(anim);
 }
 
+function showJaGirou(){
+  document.getElementById('rE').textContent='⏰';
+  document.getElementById('rT').textContent='Você já girou hoje!';
+  document.getElementById('rP').style.display='none';
+  document.getElementById('rM').textContent='Volte amanhã para tentar novamente. Enquanto isso, indique colegas e aumente suas chances no sorteio de indicadores!';
+  document.getElementById('ovRes').classList.add('show');
+}
+
+function showJaGanhou(){
+  document.getElementById('rE').textContent='🏆';
+  document.getElementById('rT').textContent='Você já ganhou neste evento!';
+  document.getElementById('rP').style.display='none';
+  document.getElementById('rM').textContent='Parabéns! Você já foi premiado neste evento. Indique colegas para o sorteio de indicadores!';
+  document.getElementById('ovRes').classList.add('show');
+}
+
 function showRes(g){
   document.getElementById('rE').textContent=g?'🎉':'😊';
   document.getElementById('rT').textContent=g?'Parabéns, você ganhou!':'Não foi dessa vez!';
@@ -679,7 +732,7 @@ function showRes(g){
   document.getElementById('rP').style.display=g?'block':'none';
   document.getElementById('rM').textContent=g
     ?'Entraremos em contato pelo WhatsApp cadastrado para enviar o Pix!'
-    :'Você já faz parte da rede! Indique colegas e concorra ao sorteio de indicadores.';
+    :'Não foi dessa vez! Volte amanhã para tentar de novo. Indique colegas e concorra ao sorteio de indicadores.';
   document.getElementById('ovRes').classList.add('show');
   if(g)fireConfetti();
 }
