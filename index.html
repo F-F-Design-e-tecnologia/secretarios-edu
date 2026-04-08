@@ -399,34 +399,36 @@ canvas.wheel{width:290px;height:290px;border-radius:50%}
     <p class="card-desc">Preencha para integrar a rede e participar do sorteio.</p>
 
     <div class="fld">
-      <label>Nome completo<span class="req">*</span></label>
-      <input type="text" id="iNome" placeholder="Ex: Maria da Silva" autocomplete="name">
-      <div class="err" id="eNome"></div>
-    </div>
-    <div class="fld">
-      <label>Cidade / UF<span class="req">*</span></label>
-      <input type="text" id="iCidade" placeholder="Ex: Salvador - BA">
-      <div class="err" id="eCidade"></div>
-    </div>
-    <div class="fld">
-      <label>Função<span class="req">*</span></label>
-      <select id="iFuncao">
-        <option value="">Selecione sua função</option>
-        <option>Secretário(a) de Educação</option>
-        <option>Dirigente Municipal de Educação</option>
-        <option>Subsecretário(a)</option>
-        <option>Diretor(a)</option>
-        <option>Coordenador(a)</option>
-        <option>Assessor(a)</option>
-        <option value="Outro">Outro</option>
-      </select>
-      <input type="text" class="fld-outro" id="iOutro" placeholder="Qual sua função?">
-      <div class="err" id="eFuncao"></div>
-    </div>
-    <div class="fld">
       <label>WhatsApp<span class="req">*</span></label>
       <input type="tel" id="iWhats" placeholder="(00) 00000-0000" maxlength="15" autocomplete="tel">
       <div class="err" id="eWhats"></div>
+    </div>
+    <div id="restForm">
+      <div class="fld">
+        <label>Nome completo<span class="req">*</span></label>
+        <input type="text" id="iNome" placeholder="Ex: Maria da Silva" autocomplete="name">
+        <div class="err" id="eNome"></div>
+      </div>
+      <div class="fld">
+        <label>Cidade / UF<span class="req">*</span></label>
+        <input type="text" id="iCidade" placeholder="Ex: Salvador - BA">
+        <div class="err" id="eCidade"></div>
+      </div>
+      <div class="fld">
+        <label>Função<span class="req">*</span></label>
+        <select id="iFuncao">
+          <option value="">Selecione sua função</option>
+          <option>Secretário(a) de Educação</option>
+          <option>Dirigente Municipal de Educação</option>
+          <option>Subsecretário(a)</option>
+          <option>Diretor(a)</option>
+          <option>Coordenador(a)</option>
+          <option>Assessor(a)</option>
+          <option value="Outro">Outro</option>
+        </select>
+        <input type="text" class="fld-outro" id="iOutro" placeholder="Qual sua função?">
+        <div class="err" id="eFuncao"></div>
+      </div>
     </div>
 
     <button class="btn-go" id="btnGo" onclick="doSubmit()">
@@ -533,7 +535,8 @@ document.getElementById('iFuncao').addEventListener('change',function(){
   document.querySelector('.fld-outro').style.display=this.value==='Outro'?'block':'none';
 });
 
-/* ═══ MASK ═══ */
+/* ═══ MASK + AUTO-CHECK ═══ */
+let isReturning = false;
 document.getElementById('iWhats').addEventListener('input',function(e){
   let v=e.target.value.replace(/\D/g,'');
   if(v.length>11)v=v.slice(0,11);
@@ -541,7 +544,36 @@ document.getElementById('iWhats').addEventListener('input',function(e){
   else if(v.length>2)v='('+v.slice(0,2)+') '+v.slice(2);
   else if(v.length>0)v='('+v;
   e.target.value=v;
+
+  // Auto-check quando número completo
+  const digits=v.replace(/\D/g,'');
+  if(digits.length>=10){
+    checkReturning(digits);
+  } else {
+    showFullForm();
+  }
 });
+
+async function checkReturning(whatsapp){
+  try{
+    const {data:existingId}=await sb.rpc('buscar_cadastro_id',{p_whatsapp:whatsapp,p_evento_id:EVENTO_ID});
+    if(existingId){
+      isReturning=true;
+      userData={id:existingId,nome:'',whatsapp:whatsapp};
+      document.getElementById('restForm').style.display='none';
+      document.getElementById('btnGo').textContent='🎯 Girar a Roleta!';
+      hE('eWhats');
+    } else {
+      showFullForm();
+    }
+  }catch(e){showFullForm()}
+}
+
+function showFullForm(){
+  isReturning=false;
+  document.getElementById('restForm').style.display='block';
+  document.getElementById('btnGo').textContent='Cadastrar e Girar a Roleta 🎯';
+}
 
 /* ═══ VALIDATION ═══ */
 function sE(id,m){const e=document.getElementById(id);e.textContent=m;e.style.display='block'}
@@ -549,17 +581,19 @@ function hE(id){document.getElementById(id).style.display='none'}
 function cE(){['eNome','eCidade','eFuncao','eWhats'].forEach(hE)}
 function validate(){
   cE();let ok=true;
-  const n=document.getElementById('iNome').value.trim();
-  const c=document.getElementById('iCidade').value.trim();
-  const f=document.getElementById('iFuncao').value;
-  const o=document.getElementById('iOutro').value.trim();
   const w=document.getElementById('iWhats').value.replace(/\D/g,'');
-  if(!n||n.length<3){sE('eNome','Preencha seu nome completo');ok=false}
-  else if(/\d/.test(n)){sE('eNome','Nome não pode conter números');ok=false}
-  if(!c){sE('eCidade','Preencha sua cidade');ok=false}
-  if(!f){sE('eFuncao','Selecione sua função');ok=false}
-  else if(f==='Outro'&&!o){sE('eFuncao','Informe sua função');ok=false}
   if(w.length<10||w.length>11){sE('eWhats','WhatsApp inválido');ok=false}
+  if(!isReturning){
+    const n=document.getElementById('iNome').value.trim();
+    const c=document.getElementById('iCidade').value.trim();
+    const f=document.getElementById('iFuncao').value;
+    const o=document.getElementById('iOutro').value.trim();
+    if(!n||n.length<3){sE('eNome','Preencha seu nome completo');ok=false}
+    else if(/\d/.test(n)){sE('eNome','Nome não pode conter números');ok=false}
+    if(!c){sE('eCidade','Preencha sua cidade');ok=false}
+    if(!f){sE('eFuncao','Selecione sua função');ok=false}
+    else if(f==='Outro'&&!o){sE('eFuncao','Informe sua função');ok=false}
+  }
   return ok;
 }
 
@@ -567,7 +601,17 @@ function validate(){
 async function doSubmit(){
   if(!validate())return;
   const btn=document.getElementById('btnGo');
-  btn.disabled=true;btn.textContent='Cadastrando...';
+  btn.disabled=true;
+
+  // Usuário retornando — vai direto pra roleta
+  if(isReturning){
+    btn.textContent='Entrando...';
+    toast('Bem-vindo de volta! Gire a roleta!');
+    goRoleta();
+    return;
+  }
+
+  btn.textContent='Cadastrando...';
   const nome=document.getElementById('iNome').value.trim();
   const cidade=document.getElementById('iCidade').value.trim();
   let funcao=document.getElementById('iFuncao').value;
@@ -581,7 +625,6 @@ async function doSubmit(){
     });
     if(error){
       if(error.message&&error.message.includes('DUPLICATA')){
-        // Já cadastrado — buscar ID e mandar pra roleta
         const {data:existingId}=await sb.rpc('buscar_cadastro_id',{
           p_whatsapp:whatsapp,p_evento_id:EVENTO_ID
         });
